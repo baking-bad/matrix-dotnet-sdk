@@ -477,3 +477,9 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 # End of https://www.toptal.com/developers/gitignore/api/rider
+*.DotSettings
+.idea/.idea.Matrix.Sdk/.idea/encodings.xml
+.idea/.idea.Matrix.Sdk/.idea/.name
+.idea/.idea.Matrix.Sdk/.idea/indexLayout.xml
+.idea/.idea.Matrix.Sdk/.idea/misc.xml
+.idea/.idea.Matrix.Sdk/.idea/vcs.xml
