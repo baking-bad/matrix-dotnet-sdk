@@ -7,7 +7,7 @@ This SDK was built for interaction with the [Beacon Node](https://github.com/air
 
 
 # Use the SDK in your app
-For a complete example, refer to [`SimpleExample.cs`](https://github.com/baking-bad/beacon-dotnet-sdk/blob/main/matrix-dotnet-sdk/Matrix.Examples.ConsoleApp/SimpleExample.cs).
+For a complete example, refer to [`SimpleExample.cs`](https://github.com/baking-bad/matrix-dotnet-sdk/blob/main/Matrix.Sdk.Sample.Console/SimpleExample.cs).
 You can also clone this repository and run `Matrix.Examples.ConsoleApp`.
 
 Here is step by step guide:
