@@ -15,7 +15,7 @@
         <Authors>Mikhail Tatarenko</Authors>
         <Product>Matrix.Sdk</Product>
         <Description>This open-source library allows you to build .NET apps compatible with Matrix Protocol - http://www.matrix.org.</Description>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Copyright>Copyright © Baking Bad 2019-2021</Copyright>
     </PropertyGroup>
 

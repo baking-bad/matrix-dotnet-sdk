@@ -61,6 +61,7 @@
             _userService.BaseAddress = baseAddress;
             _roomService.BaseAddress = baseAddress;
             _eventService.BaseAddress = baseAddress;
+            BaseAddress = baseAddress;
             
             LoginResponse response = await _userService.LoginAsync(user, password, deviceId, _cts.Token);
 
