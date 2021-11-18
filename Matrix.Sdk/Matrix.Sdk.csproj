@@ -3,17 +3,20 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <LangVersion>9</LangVersion>
-        <Nullable>enable</Nullable>
-        <Title>Matrix.Sdk</Title>
-        <Authors>Mikhail Tatarenko</Authors>
-        <Description>This open-source library allows you to build .NET apps compatible with Matrix Protocol - http://www.matrix.org.</Description>
-        <Copyright>MIT License</Copyright>
+
+        <PackageId>Matrix.Sdk</PackageId>
+        <PackageTags>matrix sdk p2p chat room</PackageTags>
         <PackageProjectUrl>https://github.com/baking-bad/matrix-dotnet-sdk</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/baking-bad/matrix-dotnet-sdk/blob/main/LICENSE</PackageLicenseUrl>
+
         <RepositoryUrl>https://github.com/baking-bad/matrix-dotnet-sdk</RepositoryUrl>
-        <RepositoryType>Public</RepositoryType>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <PackageVersion>1.0.0-alpha1</PackageVersion>
+        <RepositoryType>git</RepositoryType>
+
+        <Authors>Mikhail Tatarenko</Authors>
+        <Product>Matrix.Sdk</Product>
+        <Description>This open-source library allows you to build .NET apps compatible with Matrix Protocol - http://www.matrix.org.</Description>
+        <Version>0.0.1</Version>
+        <Copyright>Copyright © Baking Bad 2019-2021</Copyright>
     </PropertyGroup>
 
     <ItemGroup>
