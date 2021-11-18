@@ -1,5 +1,5 @@
 # **Matrix .NET SDK**
-![matrix-logo](matrix-logo.svg)
+[![matrix-logo](matrix-logo.svg)](https://matrix.org/)
 
 This open-source library allows you to build .NET apps compatible with [Matrix Protocol](http://www.matrix.org).
 It has support for a limited subset of the APIs presently. 
