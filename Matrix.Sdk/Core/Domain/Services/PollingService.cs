@@ -66,9 +66,8 @@ namespace Matrix.Sdk.Core.Domain.Services
         {
             if (!_matrixRooms.TryGetValue(roomId, out MatrixRoom oldValue))
                 _logger?.LogInformation($"RoomId: {roomId}: could not get value");
-
-            if (!_matrixRooms.TryUpdate(roomId, matrixRoom, oldValue))
-                _logger?.LogInformation($"RoomId: {roomId}: could not update value");
+            
+            _matrixRooms[roomId] = matrixRoom;
         }
 
         public MatrixRoom? GetMatrixRoom(string roomId) =>
