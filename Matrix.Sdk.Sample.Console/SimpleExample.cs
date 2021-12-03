@@ -14,7 +14,7 @@ namespace Matrix.Sdk.Sample.Console
         private static readonly CryptographyService CryptographyService = new();
 
         public record LoginRequest(Uri BaseAddress, string Username, string Password, string DeviceId);
-        
+
         private static LoginRequest CreateLoginRequest()
         {
             var seed = Guid.NewGuid().ToString();

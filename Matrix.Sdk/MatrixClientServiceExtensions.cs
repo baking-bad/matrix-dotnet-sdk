@@ -23,7 +23,6 @@ namespace Matrix.Sdk
             services.AddSingleton<RoomService>();
             services.AddSingleton<UserService>();
 
-            services.AddTransient<MatrixEventNotifier<List<BaseRoomEvent>>>();
             services.AddTransient<IPollingService, PollingService>();
             services.AddTransient<IMatrixClient, MatrixClient>();
 
