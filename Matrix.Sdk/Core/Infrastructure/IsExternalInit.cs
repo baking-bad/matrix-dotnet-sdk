@@ -6,7 +6,5 @@ namespace System.Runtime.CompilerServices
     using ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    internal class IsExternalInit
-    {
-    }
+    public record IsExternalInit;
 }
