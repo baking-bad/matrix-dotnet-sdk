@@ -22,7 +22,6 @@ namespace Matrix.Sdk.Core.Domain.Services
         private string _nextBatch;
         private Timer? _pollingTimer;
         private ulong _timeout;
-
         public PollingService(EventService eventService, ILogger<PollingService>? logger)
         {
             _eventService = eventService;
@@ -30,6 +29,8 @@ namespace Matrix.Sdk.Core.Domain.Services
             _timeout = Constants.FirstSyncTimout;
         }
 
+        public bool IsSyncing { get; private set; }
+        
         public event EventHandler<SyncBatchEventArgs> OnSyncBatchReceived;
 
         public MatrixRoom[] InvitedRooms =>
@@ -54,12 +55,16 @@ namespace Matrix.Sdk.Core.Domain.Services
                 throw new NullReferenceException("Call Init first.");
 
             _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
+
+            IsSyncing = true;
         }
 
         public void Stop()
         {
             _cts.Cancel();
             _pollingTimer!.Change(Timeout.Infinite, Timeout.Infinite);
+            
+            IsSyncing = false;
         }
 
         public void UpdateMatrixRoom(string roomId, MatrixRoom matrixRoom)

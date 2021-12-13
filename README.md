@@ -6,6 +6,16 @@ It has support for a limited subset of the APIs presently.
 
 This SDK was built for interaction with the [Beacon Node](https://github.com/airgap-it/beacon-node). It supports login through the [`crypto_auth_provider.py`](https://github.com/airgap-it/beacon-node/blob/master/docker/crypto_auth_provider.py).  
 
+## Supported Platforms
+
+* [.NET Standard 2.0](https://docs.microsoft.com/en-us/dotnet/standard/net-standard) or greater
+## Installation
+
+Matrix .NET SDK is [available on NuGet](https://www.nuget.org/packages/Matrix.Sdk/):
+
+```
+dotnet add package Matrix.Sdk
+```
 
 # Use the SDK in your app
 For a complete example, refer to [`SimpleExample.cs`](https://github.com/baking-bad/matrix-dotnet-sdk/blob/main/Matrix.Sdk.Sample.Console/SimpleExample.cs).
@@ -70,9 +80,21 @@ await anotherClient.JoinTrustedPrivateRoomAsync(matrixRoom.Id);
 // Send message
 await client.SendMessageAsync(matrixRoom.Id, "some message");
 
-//Get joined rooms ids
+// Get joined rooms ids
 await client.GetJoinedRoomsIdsAsync();
 
 // Leave room
 await client.LeaveRoomAsync(roomId);
+```
+
+## 5. Status check
+
+`IsLoggedIn` - matrix login status.
+
+`IsSyncing` - sync. Read more about syncing [here](https://spec.matrix.org/v1.1/client-server-api/#syncing).
+
+```cs
+Console.WriteLine($"client.IsLoggedIn: {client.IsLoggedIn}");
+
+Console.WriteLine($"client.IsSyncing: {client.IsSyncing}");
 ```

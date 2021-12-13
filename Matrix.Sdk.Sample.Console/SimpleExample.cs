@@ -102,13 +102,20 @@ namespace Matrix.Sdk.Sample.Console
             await client.SendMessageAsync(matrixRoom.Id, "World");
             await anotherClient.SendMessageAsync(anotherClient.JoinedRooms[0].Id, "!");
 
+            Console.WriteLine($"client.IsLoggedIn: {client.IsLoggedIn}");
+            Console.WriteLine($"client.IsSyncing: {client.IsSyncing}");
+            
             // await client.GetJoinedRoomsIdsAsync();
             // string roomId = string.Empty;
             // await client.LeaveRoomAsync(roomId);
-            Console.ReadLine();
             
+            Console.ReadLine();
+
             client.Stop();
             anotherClient.Stop();
+            
+            Console.WriteLine($"client.IsLoggedIn: {client.IsLoggedIn}");
+            Console.WriteLine($"client.IsSyncing: {client.IsSyncing}");
         }
     }
 }

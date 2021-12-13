@@ -48,7 +48,9 @@
 
         public Uri? BaseAddress { get; private set; }
 
-        public bool LoggedIn { get; private set; }
+        public bool IsLoggedIn { get; private set; }
+        
+        public bool IsSyncing { get; private set; }
 
         public MatrixRoom[] InvitedRooms => _pollingService.InvitedRooms;
 
@@ -70,22 +72,26 @@
 
             _pollingService.Init(baseAddress, _accessToken);
 
-            LoggedIn = true;
+            IsLoggedIn = true;
         }
 
         public void Start()
         {
-            if (!LoggedIn)
+            if (!IsLoggedIn)
                 throw new Exception("Call LoginAsync first");
 
             _pollingService.OnSyncBatchReceived += OnSyncBatchReceived;
             _pollingService.Start();
+
+            IsSyncing = _pollingService.IsSyncing;
         }
 
         public void Stop()
         {
             _pollingService.Stop();
             _pollingService.OnSyncBatchReceived -= OnSyncBatchReceived;
+
+            IsSyncing = _pollingService.IsSyncing;
         }
 
         public async Task<MatrixRoom> CreateTrustedPrivateRoomAsync(string[] invitedUserIds)

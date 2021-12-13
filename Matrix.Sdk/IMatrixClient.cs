@@ -14,7 +14,9 @@ namespace Matrix.Sdk
 
         Uri? BaseAddress { get; }
 
-        bool LoggedIn { get; }
+        bool IsLoggedIn { get; }
+        
+        bool IsSyncing { get; }
 
         MatrixRoom[] InvitedRooms { get; }
 
