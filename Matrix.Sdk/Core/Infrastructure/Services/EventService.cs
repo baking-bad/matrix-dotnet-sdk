@@ -18,7 +18,9 @@
             CancellationToken cancellationToken,
             ulong? timeout = null, string? nextBatch = null)
         {
-            var uri = new Uri($"{Constants.BaseAddress}{ResourcePath}/sync");
+            HttpClient httpClient = CreateHttpClient(accessToken);
+            
+            var uri = new Uri($"{httpClient.BaseAddress}{ResourcePath}/sync");
 
             if (timeout != null)
                 uri = uri.AddParameter("timeout", timeout.ToString());
@@ -26,7 +28,7 @@
             if (nextBatch != null)
                 uri = uri.AddParameter("since", nextBatch);
 
-            HttpClient httpClient = CreateHttpClient(accessToken);
+            // HttpClient httpClient = CreateHttpClient(accessToken);
 
             return await httpClient.GetAsJsonAsync<SyncResponse>(uri.ToString(), cancellationToken);
         }

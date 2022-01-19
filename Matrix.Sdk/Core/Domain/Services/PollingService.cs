@@ -103,11 +103,11 @@ namespace Matrix.Sdk.Core.Domain.Services
 
                 _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
             }
-            catch (TaskCanceledException)
+            catch (TaskCanceledException exception)
             {
                 _logger?.LogInformation("Polling: HTTP Get request canceled");
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 _logger?.LogError("Exception");
             }

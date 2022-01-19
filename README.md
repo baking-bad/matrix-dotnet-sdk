@@ -24,7 +24,7 @@ You can also clone this repository and run `Matrix.Sdk.Sample.Console`.
 Here is step by step guide:
 
 ## 1. Create 
-Use MatrixClientFactory to create an instance of `MatrixClient`
+Use `MatrixClientFactory` to create an instance of `MatrixClient`
 ```cs
 var factory = new MatrixClientFactory();
 IMatrixClient client = factory.Create();
