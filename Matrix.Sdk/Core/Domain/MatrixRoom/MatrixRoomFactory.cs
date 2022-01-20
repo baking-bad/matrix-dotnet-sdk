@@ -25,7 +25,7 @@ namespace Matrix.Sdk.Core.Domain.MatrixRoom
                         out JoinRoomEvent joinRoomEvent))
                     joinedUserIds.Add(joinRoomEvent!.SenderUserId);
 
-            return new MatrixRoom(roomId, MatrixRoomStatus.Joined, joinedUserIds);
+            return new MatrixRoom(roomId, MatrixRoomStatus.Invited, joinedUserIds);
         }
 
         public MatrixRoom CreateLeft(string roomId, LeftRoom leftRoom)

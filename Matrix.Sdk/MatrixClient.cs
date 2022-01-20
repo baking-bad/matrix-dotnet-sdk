@@ -94,32 +94,16 @@
             IsSyncing = _pollingService.IsSyncing;
         }
 
-        public async Task<MatrixRoom> CreateTrustedPrivateRoomAsync(string[] invitedUserIds)
-        {
-            CreateRoomResponse response =
-                await _roomService.CreateRoomAsync(_accessToken!, invitedUserIds, _cts.Token);
+        public async Task<CreateRoomResponse> CreateTrustedPrivateRoomAsync(string[] invitedUserIds) =>
+            await _roomService.CreateRoomAsync(_accessToken!, invitedUserIds, _cts.Token);
 
-            var matrixRoom = new MatrixRoom(response.RoomId, MatrixRoomStatus.Unknown);
-            
-            _pollingService.UpdateMatrixRoom(matrixRoom.Id, matrixRoom);
-
-            return matrixRoom;
-        }
-
-        public async Task<MatrixRoom> JoinTrustedPrivateRoomAsync(string roomId)
+        public async Task<JoinRoomResponse> JoinTrustedPrivateRoomAsync(string roomId)
         {
             MatrixRoom? matrixRoom = _pollingService.GetMatrixRoom(roomId);
             if (matrixRoom != null)
-                return matrixRoom;
+                return new JoinRoomResponse(matrixRoom.Id);
 
-            JoinRoomResponse response =
-                await _roomService.JoinRoomAsync(_accessToken!, roomId, _cts.Token);
-
-            matrixRoom = new MatrixRoom(response.RoomId, MatrixRoomStatus.Unknown);
-            
-            _pollingService.UpdateMatrixRoom(matrixRoom.Id, matrixRoom);
-
-            return matrixRoom;
+            return await _roomService.JoinRoomAsync(_accessToken!, roomId, _cts.Token);
         }
 
         public async Task<string> SendMessageAsync(string roomId, string message)

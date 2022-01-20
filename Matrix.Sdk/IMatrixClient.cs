@@ -4,6 +4,8 @@ namespace Matrix.Sdk
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Core.Domain.MatrixRoom;
+    using Core.Infrastructure.Dto.Room.Create;
+    using Core.Infrastructure.Dto.Room.Join;
 
     /// <summary>
     ///     A Client for interaction with Matrix.
@@ -32,9 +34,9 @@ namespace Matrix.Sdk
 
         void Stop();
 
-        Task<MatrixRoom> CreateTrustedPrivateRoomAsync(string[] invitedUserIds);
+        Task<CreateRoomResponse> CreateTrustedPrivateRoomAsync(string[] invitedUserIds);
 
-        Task<MatrixRoom> JoinTrustedPrivateRoomAsync(string roomId);
+        Task<JoinRoomResponse> JoinTrustedPrivateRoomAsync(string roomId);
 
         Task<string> SendMessageAsync(string roomId, string message);
 

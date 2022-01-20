@@ -5,11 +5,12 @@ namespace Matrix.Sdk.Sample.Console
     using System.Threading.Tasks;
     using Core.Domain.MatrixRoom;
     using Core.Domain.RoomEvent;
+    using Core.Infrastructure.Dto.Room.Create;
     using Serilog;
     using Serilog.Sinks.SystemConsole.Themes;
     using Sodium;
 
-    public class SimpleExample
+    public class Sample
     {
         private static readonly CryptographyService CryptographyService = new();
 
@@ -85,21 +86,21 @@ namespace Matrix.Sdk.Sample.Console
             client.Start();
             anotherClient.Start();
             
-            MatrixRoom matrixRoom = await client.CreateTrustedPrivateRoomAsync(new[]
+            CreateRoomResponse createRoomResponse = await client.CreateTrustedPrivateRoomAsync(new[]
             {
                 anotherClient.UserId
             });
-            
-            await anotherClient.JoinTrustedPrivateRoomAsync(matrixRoom.Id);
+
+            await anotherClient.JoinTrustedPrivateRoomAsync(createRoomResponse.RoomId);
             
             var spin = new SpinWait();
             while (anotherClient.JoinedRooms.Length == 0)
                 spin.SpinOnce();
             
-            await client.SendMessageAsync(matrixRoom.Id, "Hello");
+            await client.SendMessageAsync(createRoomResponse.RoomId, "Hello");
             await anotherClient.SendMessageAsync(anotherClient.JoinedRooms[0].Id, ", ");
             
-            await client.SendMessageAsync(matrixRoom.Id, "World");
+            await client.SendMessageAsync(createRoomResponse.RoomId, "World");
             await anotherClient.SendMessageAsync(anotherClient.JoinedRooms[0].Id, "!");
 
             Console.WriteLine($"client.IsLoggedIn: {client.IsLoggedIn}");

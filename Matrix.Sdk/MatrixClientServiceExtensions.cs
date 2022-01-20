@@ -15,14 +15,14 @@ namespace Matrix.Sdk
     {
         public static IServiceCollection AddMatrixClient(this IServiceCollection services)
         {
-            services.AddSingleton<ClientService>();
-
             services.AddHttpClient();
-
+            
+            services.AddSingleton<ClientService>();
+            
             services.AddSingleton<EventService>();
             services.AddSingleton<RoomService>();
             services.AddSingleton<UserService>();
-
+            
             services.AddTransient<IPollingService, PollingService>();
             services.AddTransient<IMatrixClient, MatrixClient>();
 

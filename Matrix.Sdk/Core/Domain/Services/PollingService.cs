@@ -67,14 +67,6 @@ namespace Matrix.Sdk.Core.Domain.Services
             IsSyncing = false;
         }
 
-        public void UpdateMatrixRoom(string roomId, MatrixRoom matrixRoom)
-        {
-            if (!_matrixRooms.TryGetValue(roomId, out MatrixRoom oldValue))
-                _logger?.LogInformation($"RoomId: {roomId}: could not get value");
-            
-            _matrixRooms[roomId] = matrixRoom;
-        }
-
         public MatrixRoom? GetMatrixRoom(string roomId) =>
             _matrixRooms.TryGetValue(roomId, out MatrixRoom matrixRoom) ? matrixRoom : null;
 
@@ -83,7 +75,7 @@ namespace Matrix.Sdk.Core.Domain.Services
             _cts.Dispose();
             _pollingTimer?.Dispose();
         }
-
+        
         private async Task PollAsync()
         {
             try
@@ -103,13 +95,13 @@ namespace Matrix.Sdk.Core.Domain.Services
 
                 _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
             }
-            catch (TaskCanceledException exception)
+            catch (TaskCanceledException ex)
             {
                 _logger?.LogInformation("Polling: HTTP Get request canceled");
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                _logger?.LogError("Exception");
+                _logger?.LogError($"Polling: exception occured. Message: {ex.Message}");
             }
         }
 
@@ -118,13 +110,14 @@ namespace Matrix.Sdk.Core.Domain.Services
             foreach (MatrixRoom room in matrixRooms)
                 if (!_matrixRooms.TryGetValue(room.Id, out MatrixRoom retrievedRoom))
                 {
-                    _matrixRooms.TryAdd(room.Id, room);
+                    if (!_matrixRooms.TryAdd(room.Id, room))
+                        _logger?.LogError("Can not add matrix room");
                 }
                 else
                 {
                     var updatedUserIds = retrievedRoom.JoinedUserIds.Concat(room.JoinedUserIds).ToList();
                     var updatedRoom = new MatrixRoom(retrievedRoom.Id, room.Status, updatedUserIds);
-
+                
                     _matrixRooms.TryUpdate(room.Id, updatedRoom, retrievedRoom);
                 }
         }
