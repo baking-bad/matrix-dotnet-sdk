@@ -21,8 +21,6 @@ namespace Matrix.Sdk.Core.Domain.Services
 
         void Stop();
 
-        void UpdateMatrixRoom(string roomId, MatrixRoom matrixRoom);
-
         MatrixRoom? GetMatrixRoom(string roomId);
     }
 }
