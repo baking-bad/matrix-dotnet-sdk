@@ -18,7 +18,7 @@ dotnet add package Matrix.Sdk
 ```
 
 # Use the SDK in your app
-For a complete example, refer to [`SimpleExample.cs`](https://github.com/baking-bad/matrix-dotnet-sdk/blob/main/Matrix.Sdk.Sample.Console/SimpleExample.cs).
+For a complete example, refer to [`Sample.cs`](https://github.com/baking-bad/matrix-dotnet-sdk/blob/main/Matrix.Sdk.Sample.Console/Sample.cs).
 You can also clone this repository and run `Matrix.Sdk.Sample.Console`.
 
 Here is step by step guide:
@@ -69,16 +69,16 @@ client.Stop();
 
 ```cs
 // Create room
-MatrixRoom matrixRoom = await client.CreateTrustedPrivateRoomAsync(new[]
+CreateRoomResponse createRoomResponse = await client.CreateTrustedPrivateRoomAsync(new[]
 {
     anotherClient.UserId
 });
 
 // Join room
-await anotherClient.JoinTrustedPrivateRoomAsync(matrixRoom.Id);
+await anotherClient.JoinTrustedPrivateRoomAsync(createRoomResponse.RoomId);
 
 // Send message
-await client.SendMessageAsync(matrixRoom.Id, "some message");
+await client.SendMessageAsync(createRoomResponse.RoomId, "some message");
 
 // Get joined rooms ids
 await client.GetJoinedRoomsIdsAsync();
