@@ -12,7 +12,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room.State
         ///     This is set by the homeserver.
         /// </summary>
         [JsonProperty("creator")]
-        public string RoomCreatorUserId { get; init; }
+        public string RoomCreatorUserId { get; init; } = default!;
 
         /// <summary>
         ///     Whether users on other servers can join this room. Defaults to <b>true</b> if key does not exist.
@@ -28,7 +28,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room.State
         /// <summary>
         ///     A reference to the room this room replaces, if the previous room was upgraded.
         /// </summary>
-        public PreviousRoom Predecessor { get; init; }
+        public PreviousRoom Predecessor { get; init; } = default!;
     }
 
     public record PreviousRoom
@@ -37,12 +37,12 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room.State
         ///     <b>Required.</b> The ID of the old room.
         /// </summary>
         [JsonProperty("room_id")]
-        public string OldRoomId { get; init; }
+        public string OldRoomId { get; init; } = default!;
 
         /// <summary>
         ///     <b>Required.</b> The event ID of the last known event in the old room.
         /// </summary>
         [JsonProperty("event_id")]
-        public string LastKnownEventId { get; init; }
+        public string LastKnownEventId { get; init; } = default!;
     }
 }

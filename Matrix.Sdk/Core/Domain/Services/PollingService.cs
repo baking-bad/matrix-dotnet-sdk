@@ -27,11 +27,12 @@ namespace Matrix.Sdk.Core.Domain.Services
             _eventService = eventService;
             _logger = logger;
             _timeout = Constants.FirstSyncTimout;
+            _nextBatch =  default!;
         }
 
         public bool IsSyncing { get; private set; }
-        
-        public event EventHandler<SyncBatchEventArgs> OnSyncBatchReceived;
+
+        public event EventHandler<SyncBatchEventArgs>? OnSyncBatchReceived;
 
         public MatrixRoom[] InvitedRooms =>
             _matrixRooms.Values.Where(x => x.Status == MatrixRoomStatus.Invited).ToArray();
@@ -63,7 +64,7 @@ namespace Matrix.Sdk.Core.Domain.Services
         {
             _cts.Cancel();
             _pollingTimer!.Change(Timeout.Infinite, Timeout.Infinite);
-            
+
             IsSyncing = false;
         }
 
@@ -75,7 +76,7 @@ namespace Matrix.Sdk.Core.Domain.Services
             _cts.Dispose();
             _pollingTimer?.Dispose();
         }
-        
+
         private async Task PollAsync()
         {
             try
@@ -91,11 +92,11 @@ namespace Matrix.Sdk.Core.Domain.Services
                 _timeout = Constants.LaterSyncTimout;
 
                 RefreshRooms(syncBatch.MatrixRooms);
-                OnSyncBatchReceived.Invoke(this, new SyncBatchEventArgs(syncBatch));
+                OnSyncBatchReceived?.Invoke(this, new SyncBatchEventArgs(syncBatch));
 
                 _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException)
             {
                 _logger?.LogInformation("Polling: HTTP Get request canceled");
             }
@@ -117,7 +118,7 @@ namespace Matrix.Sdk.Core.Domain.Services
                 {
                     var updatedUserIds = retrievedRoom.JoinedUserIds.Concat(room.JoinedUserIds).ToList();
                     var updatedRoom = new MatrixRoom(retrievedRoom.Id, room.Status, updatedUserIds);
-                
+
                     _matrixRooms.TryUpdate(room.Id, updatedRoom, retrievedRoom);
                 }
         }
