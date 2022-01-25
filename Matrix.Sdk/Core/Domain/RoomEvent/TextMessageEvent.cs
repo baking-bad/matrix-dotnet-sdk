@@ -11,7 +11,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
         {
             public static bool TryCreateFrom(RoomEvent roomEvent, string roomId, out TextMessageEvent textMessageEvent)
             {
-                MessageContent content = roomEvent.Content.ToObject<MessageContent>();
+                MessageContent? content = roomEvent.Content.ToObject<MessageContent>();
                 if (roomEvent.EventType == EventType.Message && content?.MessageType == MessageType.Text)
                 {
                     textMessageEvent = new TextMessageEvent(roomId, roomEvent.SenderUserId, content.Body);
@@ -25,7 +25,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
             public static bool TryCreateFromStrippedState(RoomStrippedState roomStrippedState, string roomId,
                 out TextMessageEvent textMessageEvent)
             {
-                MessageContent content = roomStrippedState.Content.ToObject<MessageContent>();
+                MessageContent? content = roomStrippedState.Content.ToObject<MessageContent>();
                 if (roomStrippedState.EventType == EventType.Message && content?.MessageType == MessageType.Text)
                 {
                     textMessageEvent = new TextMessageEvent(roomId, roomStrippedState.SenderUserId, content.Body);

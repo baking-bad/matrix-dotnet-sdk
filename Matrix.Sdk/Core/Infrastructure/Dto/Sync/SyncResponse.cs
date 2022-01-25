@@ -11,12 +11,12 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync
         /// <summary>
         ///     <b>Required.</b> The batch token to supply in the since param of the next /sync request.
         /// </summary>
-        public string NextBatch { get; init; }
+        public string NextBatch { get; init; } = default!;
 
         /// <summary>
         ///     <b>Updates</b> to rooms.
         /// </summary>
-        public Rooms Rooms { get; init; }
+        public Rooms Rooms { get; init; } = default!;
     }
 
     public record Rooms
@@ -24,17 +24,17 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync
         /// <summary>
         ///     The rooms that the user has joined, mapped as room ID to room information.
         /// </summary>
-        public Dictionary<string, JoinedRoom> Join { get; init; }
+        public Dictionary<string, JoinedRoom> Join { get; init; } = default!;
 
         /// <summary>
         ///     The rooms that the user has been invited to, mapped as room ID to room information.
         /// </summary>
-        public Dictionary<string, InvitedRoom> Invite { get; init; }
+        public Dictionary<string, InvitedRoom> Invite { get; init; } = default!;
 
         /// <summary>
         ///     The rooms that the user has left or been banned from, mapped as room ID to room information.
         /// </summary>
-        public Dictionary<string, LeftRoom> Leave { get; init; }
+        public Dictionary<string, LeftRoom> Leave { get; init; } = default!;
     }
 
     public record JoinedRoom(Timeline Timeline, State State);

@@ -8,6 +8,6 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room
         ///     This value is often a zero-length string.
         ///     The presence of this key makes this event a State Event.
         /// </summary>
-        public string StateKey { get; init; }
+        public string StateKey { get; init; } = default!;
     }
 }

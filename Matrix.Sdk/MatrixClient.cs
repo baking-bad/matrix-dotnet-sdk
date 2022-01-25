@@ -21,19 +21,19 @@
     {
         private readonly CancellationTokenSource _cts = new();
         private readonly IPollingService _pollingService;
-        
+
         private readonly UserService _userService;
         private readonly RoomService _roomService;
         private readonly EventService _eventService;
-        
-       
+
+
         private string? _accessToken;
         private ulong _transactionNumber;
 
         public MatrixClient(
             IPollingService pollingService,
-            UserService userService, 
-            RoomService roomService, 
+            UserService userService,
+            RoomService roomService,
             EventService eventService)
         {
             _pollingService = pollingService;
@@ -42,14 +42,14 @@
             _eventService = eventService;
         }
 
-        public event EventHandler<MatrixRoomEventsEventArgs> OnMatrixRoomEventsReceived;
+        public event EventHandler<MatrixRoomEventsEventArgs>? OnMatrixRoomEventsReceived;
 
-        public string UserId { get; private set; }
+        public string UserId { get; private set; } = default!;
 
         public Uri? BaseAddress { get; private set; }
 
         public bool IsLoggedIn { get; private set; }
-        
+
         public bool IsSyncing { get; private set; }
 
         public MatrixRoom[] InvitedRooms => _pollingService.InvitedRooms;
@@ -64,7 +64,7 @@
             _roomService.BaseAddress = baseAddress;
             _eventService.BaseAddress = baseAddress;
             BaseAddress = baseAddress;
-            
+
             LoginResponse response = await _userService.LoginAsync(user, password, deviceId, _cts.Token);
 
             UserId = response.UserId;
@@ -109,7 +109,7 @@
         public async Task<string> SendMessageAsync(string roomId, string message)
         {
             string transactionId = CreateTransactionId();
-            
+
             EventResponse eventResponse = await _eventService.SendMessageAsync(_accessToken!,
                 roomId, transactionId, message, _cts.Token);
 
@@ -117,7 +117,7 @@
                 throw new NullReferenceException(nameof(eventResponse.EventId));
 
             return eventResponse.EventId;
-            
+
         }
 
         public async Task<List<string>> GetJoinedRoomsIdsAsync()
@@ -128,7 +128,7 @@
             return response.JoinedRoomIds;
         }
 
-        public async Task LeaveRoomAsync(string roomId) => 
+        public async Task LeaveRoomAsync(string roomId) =>
             await _roomService.LeaveRoomAsync(_accessToken!, roomId, _cts.Token);
 
         private void OnSyncBatchReceived(object? sender, SyncBatchEventArgs syncBatchEventArgs)
@@ -138,7 +138,7 @@
 
             SyncBatch batch = syncBatchEventArgs.SyncBatch;
 
-            OnMatrixRoomEventsReceived.Invoke(this, new MatrixRoomEventsEventArgs(batch.MatrixRoomEvents));
+            OnMatrixRoomEventsReceived?.Invoke(this, new MatrixRoomEventsEventArgs(batch.MatrixRoomEvents));
         }
 
         private string CreateTransactionId()

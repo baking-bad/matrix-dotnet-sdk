@@ -4,7 +4,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.ClientVersion
 
     public class MatrixServerVersionsResponse
     {
-        public List<string> versions { get; set; }
-        public UnstableFeatures unstable_features { get; set; }
+        public List<string> versions { get; set; } = default!;
+        public UnstableFeatures unstable_features { get; set; } = default!;
     }
 }

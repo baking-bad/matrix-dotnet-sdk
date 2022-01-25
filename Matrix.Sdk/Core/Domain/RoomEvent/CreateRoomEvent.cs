@@ -11,7 +11,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
         {
             public static bool TryCreateFrom(RoomEvent roomEvent, string roomId, out CreateRoomEvent createRoomEvent)
             {
-                RoomCreateContent content = roomEvent.Content.ToObject<RoomCreateContent>();
+                RoomCreateContent? content = roomEvent.Content.ToObject<RoomCreateContent>();
                 if (roomEvent.EventType == EventType.Create && content != null)
                 {
                     createRoomEvent = new CreateRoomEvent(roomId, roomEvent.SenderUserId, content.RoomCreatorUserId);
@@ -25,7 +25,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
             public static bool TryCreateFromStrippedState(RoomStrippedState roomStrippedState, string roomId,
                 out CreateRoomEvent createRoomEvent)
             {
-                RoomCreateContent content = roomStrippedState.Content.ToObject<RoomCreateContent>();
+                RoomCreateContent? content = roomStrippedState.Content.ToObject<RoomCreateContent>();
                 if (roomStrippedState.EventType == EventType.Create && content != null)
                 {
                     createRoomEvent =

@@ -13,7 +13,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room.Messaging
         /// <summary>
         ///     <b>Required.</b> The textual representation of this message.
         /// </summary>
-        public string Body { get; init; }
+        public string Body { get; init; } = default!;
 
         public MessageType MessageType { get; private set; }
 
