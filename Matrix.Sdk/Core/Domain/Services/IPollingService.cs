@@ -17,7 +17,7 @@ namespace Matrix.Sdk.Core.Domain.Services
 
         void Init(Uri nodeAddress, string accessToken);
 
-        void Start();
+        void Start(string? nextBatch = null);
 
         void Stop();
 

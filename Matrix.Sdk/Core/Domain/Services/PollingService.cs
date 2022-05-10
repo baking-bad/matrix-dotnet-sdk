@@ -49,11 +49,14 @@ namespace Matrix.Sdk.Core.Domain.Services
             _pollingTimer = new Timer(async _ => await PollAsync());
         }
 
-        public void Start()
+        public void Start(string? nextBatch = null)
         {
             if (_pollingTimer == null)
                 throw new NullReferenceException("Call Init first.");
 
+            if (nextBatch != null) 
+                _nextBatch = nextBatch;
+            
             _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
 
             IsSyncing = true;
