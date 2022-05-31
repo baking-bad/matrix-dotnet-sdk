@@ -98,13 +98,13 @@ namespace Matrix.Sdk.Core.Domain.Services
 
                 _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException)
             {
                 _logger?.LogInformation("Polling: HTTP Get request canceled");
             }
             catch (Exception ex)
             {
-                _logger?.LogError($"Polling: exception occured. Message: {ex.Message}");
+                _logger?.LogError("Polling: exception occured. Message: {@Message}", ex.Message);
             }
         }
 
@@ -118,7 +118,12 @@ namespace Matrix.Sdk.Core.Domain.Services
                 }
                 else
                 {
-                    var updatedUserIds = retrievedRoom.JoinedUserIds.Concat(room.JoinedUserIds).ToList();
+                    var updatedUserIds = retrievedRoom
+                        .JoinedUserIds
+                        .Concat(room.JoinedUserIds)
+                        .Distinct()
+                        .ToList();
+                    
                     var updatedRoom = new MatrixRoom(retrievedRoom.Id, room.Status, updatedUserIds);
                 
                     _matrixRooms.TryUpdate(room.Id, updatedRoom, retrievedRoom);
