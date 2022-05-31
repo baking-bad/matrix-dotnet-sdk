@@ -22,6 +22,7 @@ namespace Matrix.Sdk.Core.Domain.Services
         private string _nextBatch;
         private Timer? _pollingTimer;
         private ulong _timeout;
+
         public PollingService(EventService eventService, ILogger<PollingService>? logger)
         {
             _eventService = eventService;
@@ -30,7 +31,7 @@ namespace Matrix.Sdk.Core.Domain.Services
         }
 
         public bool IsSyncing { get; private set; }
-        
+
         public event EventHandler<SyncBatchEventArgs> OnSyncBatchReceived;
 
         public MatrixRoom[] InvitedRooms =>
@@ -54,19 +55,17 @@ namespace Matrix.Sdk.Core.Domain.Services
             if (_pollingTimer == null)
                 throw new NullReferenceException("Call Init first.");
 
-            if (nextBatch != null) 
+            if (nextBatch != null)
                 _nextBatch = nextBatch;
-            
-            _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
 
-            IsSyncing = true;
+            _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
         }
 
         public void Stop()
         {
             _cts.Cancel();
             _pollingTimer!.Change(Timeout.Infinite, Timeout.Infinite);
-            
+
             IsSyncing = false;
         }
 
@@ -78,7 +77,7 @@ namespace Matrix.Sdk.Core.Domain.Services
             _cts.Dispose();
             _pollingTimer?.Dispose();
         }
-        
+
         private async Task PollAsync()
         {
             try
@@ -90,20 +89,23 @@ namespace Matrix.Sdk.Core.Domain.Services
 
                 SyncBatch syncBatch = SyncBatch.Factory.CreateFromSync(response.NextBatch, response.Rooms);
 
+                IsSyncing = true;
                 _nextBatch = syncBatch.NextBatch;
                 _timeout = Constants.LaterSyncTimout;
 
                 RefreshRooms(syncBatch.MatrixRooms);
                 OnSyncBatchReceived.Invoke(this, new SyncBatchEventArgs(syncBatch));
 
-                _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
-            }
-            catch (TaskCanceledException)
-            {
-                _logger?.LogInformation("Polling: HTTP Get request canceled");
+                // immediately call timer cb (this method)
+                _pollingTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
             }
             catch (Exception ex)
             {
+                // call timer cb (this method) after Constants.LaterSyncTimout
+                _pollingTimer?.Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout),
+                    TimeSpan.FromMilliseconds(-1));
+
+                IsSyncing = false;
                 _logger?.LogError("Polling: exception occured. Message: {@Message}", ex.Message);
             }
         }
@@ -123,9 +125,9 @@ namespace Matrix.Sdk.Core.Domain.Services
                         .Concat(room.JoinedUserIds)
                         .Distinct()
                         .ToList();
-                    
+
                     var updatedRoom = new MatrixRoom(retrievedRoom.Id, room.Status, updatedUserIds);
-                
+
                     _matrixRooms.TryUpdate(room.Id, updatedRoom, retrievedRoom);
                 }
         }

@@ -8,9 +8,9 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
     {
         // see: https://github.com/dotnet/aspnetcore/issues/28385#issuecomment-853766480
         private readonly IHttpClientFactory _httpClientFactory;
-        
+
         public Uri? BaseAddress { get; set; }
-        
+
         protected BaseApiService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
@@ -31,11 +31,13 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
             if (accessToken != null)
                 httpClient.AddBearerToken(accessToken);
 
-            if (BaseAddress == null) 
+            if (BaseAddress == null)
                 throw new NullReferenceException("set base address");
-            
-            if (httpClient.BaseAddress == null) 
+
+            if (httpClient.BaseAddress == null)
                 httpClient.BaseAddress = BaseAddress;
+
+            httpClient.Timeout = TimeSpan.FromMilliseconds(Constants.LaterSyncTimout + 10000);
 
             return httpClient;
         }
