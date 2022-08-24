@@ -13,11 +13,11 @@ namespace Matrix.Sdk.Core.Domain.Services
 
     public class PollingService : IPollingService
     {
-        private readonly CancellationTokenSource _cts = new();
         private readonly EventService _eventService;
         private readonly ILogger<PollingService>? _logger;
-        private readonly ConcurrentDictionary<string, MatrixRoom> _matrixRooms = new();
 
+        private ConcurrentDictionary<string, MatrixRoom> _matrixRooms;
+        private CancellationTokenSource _cts;
         private string? _accessToken;
         private string _nextBatch;
         private Timer? _pollingTimer;
@@ -46,7 +46,8 @@ namespace Matrix.Sdk.Core.Domain.Services
         {
             _eventService.BaseAddress = nodeAddress;
             _accessToken = accessToken;
-
+            _cts = new CancellationTokenSource();
+            _matrixRooms = new ConcurrentDictionary<string, MatrixRoom>();
             _pollingTimer = new Timer(async _ => await PollAsync());
         }
 
@@ -98,6 +99,20 @@ namespace Matrix.Sdk.Core.Domain.Services
 
                 // immediately call timer cb (this method)
                 _pollingTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
+            }
+            catch (System.Net.Http.HttpRequestException ex)
+            {
+                // call timer cb (this method) after Constants.LaterSyncTimout
+                _pollingTimer?.Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout),
+                    TimeSpan.FromMilliseconds(-1));
+
+                IsSyncing = false;
+                _logger?.LogError("Polling: exception occured. Message: {@Message}", ex.Message);
+            }
+            catch (TaskCanceledException ex)
+            {
+                IsSyncing = false;
+                _logger?.LogError("Polling cancelled: {@Message}", ex.Message);
             }
             catch (Exception ex)
             {
