@@ -53,7 +53,7 @@
         public bool IsSyncing { get; private set; }
 
         public MatrixRoom[] InvitedRooms => _pollingService.InvitedRooms;
-
+        
         public MatrixRoom[] JoinedRooms => _pollingService.JoinedRooms;
 
         public MatrixRoom[] LeftRooms => _pollingService.LeftRooms;
@@ -75,13 +75,13 @@
             IsLoggedIn = true;
         }
 
-        public void Start()
+        public void Start(string? nextBatch = null)
         {
             if (!IsLoggedIn)
                 throw new Exception("Call LoginAsync first");
 
             _pollingService.OnSyncBatchReceived += OnSyncBatchReceived;
-            _pollingService.Start();
+            _pollingService.Start(nextBatch);
 
             IsSyncing = _pollingService.IsSyncing;
         }
@@ -138,7 +138,7 @@
 
             SyncBatch batch = syncBatchEventArgs.SyncBatch;
 
-            OnMatrixRoomEventsReceived.Invoke(this, new MatrixRoomEventsEventArgs(batch.MatrixRoomEvents));
+            OnMatrixRoomEventsReceived.Invoke(this, new MatrixRoomEventsEventArgs(batch.MatrixRoomEvents,  batch.NextBatch));
         }
 
         private string CreateTransactionId()

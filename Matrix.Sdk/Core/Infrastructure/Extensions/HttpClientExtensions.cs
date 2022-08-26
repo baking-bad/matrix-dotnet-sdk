@@ -50,7 +50,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Extensions
             string json = JsonConvert.SerializeObject(model, settings);
             var content = new StringContent(json, Encoding.Default, "application/json");
 
-            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content, cancellationToken);
+            HttpResponseMessage response = await httpClient.PostAsync(requestUri, content, cancellationToken);//.ConfigureAwait(false);
             string result = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -83,7 +83,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Extensions
         public static async Task<TResponse> GetAsJsonAsync<TResponse>(this HttpClient httpClient,
             string requestUri, CancellationToken cancellationToken)
         {
-            HttpResponseMessage response = await httpClient.GetAsync(requestUri, cancellationToken);
+            HttpResponseMessage response = await httpClient.GetAsync(requestUri, cancellationToken);//.ConfigureAwait(false);
             string result = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)

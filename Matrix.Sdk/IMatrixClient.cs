@@ -30,7 +30,7 @@ namespace Matrix.Sdk
 
         Task LoginAsync(Uri baseAddress, string user, string password, string deviceId);
 
-        void Start();
+        void Start(string? nextBatch = null);
 
         void Stop();
 
