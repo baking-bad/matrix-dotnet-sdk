@@ -100,19 +100,18 @@ namespace Matrix.Sdk.Core.Domain.Services
                 // immediately call timer cb (this method)
                 _pollingTimer?.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
             }
-            catch (System.Net.Http.HttpRequestException ex)
-            {
-                // call timer cb (this method) after Constants.LaterSyncTimout
-                _pollingTimer?.Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout),
-                    TimeSpan.FromMilliseconds(-1));
-
-                IsSyncing = false;
-                _logger?.LogError("Polling: exception occured. Message: {@Message}", ex.Message);
-            }
             catch (TaskCanceledException ex)
             {
+                if (!_cts.IsCancellationRequested)
+                {
+                    // call timer cb (this method) after Constants.LaterSyncTimout
+                    _pollingTimer?.Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout),
+                        TimeSpan.FromMilliseconds(-1));
+                }
+
                 IsSyncing = false;
-                _logger?.LogError("Polling cancelled: {@Message}", ex.Message);
+                _logger?.LogError("Polling cancelled, _cts.IsCancellationRequested {@IsCancellationRequested}:, {@Message}",
+                    _cts.IsCancellationRequested, ex.Message);
             }
             catch (Exception ex)
             {
