@@ -10,6 +10,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
         private readonly IHttpClientFactory _httpClientFactory;
 
         public Uri? BaseAddress { get; set; }
+        private static TimeSpan DefaultTimeout => TimeSpan.FromMilliseconds(Constants.LaterSyncTimout + 10000);
 
         protected BaseApiService(IHttpClientFactory httpClientFactory)
         {
@@ -26,7 +27,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
         /// <returns>HttpClient</returns>
         protected HttpClient CreateHttpClient(string? accessToken = null)
         {
-            HttpClient httpClient = _httpClientFactory.CreateClient(Constants.Matrix);
+            var httpClient = _httpClientFactory.CreateClient(Constants.Matrix);
 
             if (accessToken != null)
                 httpClient.AddBearerToken(accessToken);
@@ -37,7 +38,8 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
             if (httpClient.BaseAddress == null)
                 httpClient.BaseAddress = BaseAddress;
 
-            httpClient.Timeout = TimeSpan.FromMilliseconds(Constants.LaterSyncTimout + 10000);
+            if (httpClient.Timeout != DefaultTimeout)
+                httpClient.Timeout = DefaultTimeout;
 
             return httpClient;
         }
