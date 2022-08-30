@@ -7,12 +7,19 @@ namespace Matrix.Sdk
 
     public class SingletonHttpFactory : IHttpClientFactory
     {
-        private readonly HttpClient _httpClient = new();
-        
+        private readonly HttpClient _httpClient;
+
+        public SingletonHttpFactory()
+        {
+            var httpClientHandler = new HttpClientHandler
+                { ServerCertificateCustomValidationCallback = (_, _, _, _) => true };
+            _httpClient = new HttpClient(httpClientHandler);
+        }
+
         public HttpClient CreateClient(string name) => _httpClient;
-    } 
-    
-    
+    }
+
+
     public class MatrixClientFactory
     {
         private readonly SingletonHttpFactory _httpClientFactory = new();
