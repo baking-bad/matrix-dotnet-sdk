@@ -84,13 +84,12 @@ namespace Matrix.Sdk.Core.Domain.Services
             try
             {
                 _pollingTimer!.Change(Timeout.Infinite, Timeout.Infinite);
-
+                IsSyncing = true;
+                
                 SyncResponse response = await _eventService.SyncAsync(_accessToken!, _cts.Token,
                     _timeout, _nextBatch);
-
                 SyncBatch syncBatch = SyncBatch.Factory.CreateFromSync(response.NextBatch, response.Rooms);
-
-                IsSyncing = true;
+                
                 _nextBatch = syncBatch.NextBatch;
                 _timeout = Constants.LaterSyncTimout;
 
