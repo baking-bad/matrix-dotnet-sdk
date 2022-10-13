@@ -100,7 +100,7 @@
         public async Task<JoinRoomResponse> JoinTrustedPrivateRoomAsync(string roomId)
         {
             MatrixRoom? matrixRoom = _pollingService.GetMatrixRoom(roomId);
-            if (matrixRoom != null)
+            if (matrixRoom != null && matrixRoom.Status != MatrixRoomStatus.Invited)
                 return new JoinRoomResponse(matrixRoom.Id);
 
             return await _roomService.JoinRoomAsync(_accessToken!, roomId, _cts.Token);
