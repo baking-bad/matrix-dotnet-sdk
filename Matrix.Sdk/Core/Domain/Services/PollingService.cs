@@ -60,13 +60,13 @@ namespace Matrix.Sdk.Core.Domain.Services
                 _nextBatch = nextBatch;
 
             _pollingTimer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(-1));
+            IsSyncing = true;
         }
 
         public void Stop()
         {
             _cts.Cancel();
             _pollingTimer!.Change(Timeout.Infinite, Timeout.Infinite);
-
             IsSyncing = false;
         }
 
@@ -85,11 +85,11 @@ namespace Matrix.Sdk.Core.Domain.Services
             {
                 _pollingTimer!.Change(Timeout.Infinite, Timeout.Infinite);
                 IsSyncing = true;
-                
+
                 SyncResponse response = await _eventService.SyncAsync(_accessToken!, _cts.Token,
                     _timeout, _nextBatch);
                 SyncBatch syncBatch = SyncBatch.Factory.CreateFromSync(response.NextBatch, response.Rooms);
-                
+
                 _nextBatch = syncBatch.NextBatch;
                 _timeout = Constants.LaterSyncTimout;
 
@@ -103,20 +103,19 @@ namespace Matrix.Sdk.Core.Domain.Services
             {
                 if (!_cts.IsCancellationRequested)
                 {
-                    // call timer cb (this method) after Constants.LaterSyncTimout
-                    _pollingTimer?.Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout),
-                        TimeSpan.FromMilliseconds(-1));
+                    _pollingTimer?
+                        .Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout), TimeSpan.FromMilliseconds(-1));
                 }
 
                 IsSyncing = false;
-                _logger?.LogError("Polling cancelled, _cts.IsCancellationRequested {@IsCancellationRequested}:, {@Message}",
+                _logger?.LogError(
+                    "Polling cancelled, _cts.IsCancellationRequested {@IsCancellationRequested}:, {@Message}",
                     _cts.IsCancellationRequested, ex.Message);
             }
             catch (Exception ex)
             {
-                // call timer cb (this method) after Constants.LaterSyncTimout
-                _pollingTimer?.Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout),
-                    TimeSpan.FromMilliseconds(-1));
+                _pollingTimer?
+                    .Change(TimeSpan.FromMilliseconds(Constants.LaterSyncTimout), TimeSpan.FromMilliseconds(-1));
 
                 IsSyncing = false;
                 _logger?.LogError("Polling: exception occured. Message: {@Message}", ex.Message);
