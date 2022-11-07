@@ -14,11 +14,9 @@ namespace Matrix.Sdk
     {
         public static IServiceCollection AddMatrixClient(this IServiceCollection services)
         {
-            services.AddHttpClient(Constants.Matrix)
-                .ConfigurePrimaryHttpMessageHandler(SingletonHttpFactory.GetHttpHandler);
+            services.AddSingleton<IHttpClientFactory, SingletonHttpFactory>();
 
             services.AddSingleton<ClientService>();
-
             services.AddSingleton<EventService>();
             services.AddSingleton<RoomService>();
             services.AddSingleton<UserService>();
