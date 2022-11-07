@@ -9,11 +9,13 @@ namespace Matrix.Sdk
     {
         private readonly HttpClient _httpClient;
 
+        public static HttpClientHandler GetHttpHandler() => new HttpClientHandler
+            { ServerCertificateCustomValidationCallback = (_, _, _, _) => true };
+
         public SingletonHttpFactory()
         {
-            var httpClientHandler = new HttpClientHandler
-                { ServerCertificateCustomValidationCallback = (_, _, _, _) => true };
-            _httpClient = new HttpClient(httpClientHandler);
+            var httpClientHandler =
+                _httpClient = new HttpClient(GetHttpHandler());
         }
 
         public HttpClient CreateClient(string name) => _httpClient;

@@ -1,8 +1,7 @@
+using System.Net.Http;
+
 namespace Matrix.Sdk
 {
-    using System.Collections.Generic;
-    using Core;
-    using Core.Domain.RoomEvent;
     using Core.Domain.Services;
     using Core.Infrastructure.Services;
     using Microsoft.Extensions.DependencyInjection;
@@ -15,14 +14,15 @@ namespace Matrix.Sdk
     {
         public static IServiceCollection AddMatrixClient(this IServiceCollection services)
         {
-            services.AddHttpClient();
-            
+            services.AddHttpClient(Constants.Matrix)
+                .ConfigurePrimaryHttpMessageHandler(SingletonHttpFactory.GetHttpHandler);
+
             services.AddSingleton<ClientService>();
-            
+
             services.AddSingleton<EventService>();
             services.AddSingleton<RoomService>();
             services.AddSingleton<UserService>();
-            
+
             services.AddTransient<IPollingService, PollingService>();
             services.AddTransient<IMatrixClient, MatrixClient>();
 
