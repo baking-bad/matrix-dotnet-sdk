@@ -4,7 +4,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
     using Infrastructure.Dto.Sync.Event.Room;
     using Infrastructure.Dto.Sync.Event.Room.State;
 
-    public record InviteToRoomEvent(string RoomId, string SenderUserId) : BaseRoomEvent(RoomId, SenderUserId)
+    public record InviteToRoomEvent(string EventId, string RoomId, string SenderUserId, DateTimeOffset Timestamp) : BaseRoomEvent(EventId, RoomId, SenderUserId, Timestamp)
     {
         public static class Factory
         {
@@ -15,11 +15,11 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
                 if (roomEvent.EventType == EventType.Member &&
                     content?.UserMembershipState == UserMembershipState.Invite)
                 {
-                    inviteToRoomEvent = new InviteToRoomEvent(roomId, roomEvent.SenderUserId);
+                    inviteToRoomEvent = new InviteToRoomEvent(roomEvent.EventId, roomId, roomEvent.SenderUserId, roomEvent.Timestamp);
                     return true;
                 }
 
-                inviteToRoomEvent = new InviteToRoomEvent(string.Empty, string.Empty);
+                inviteToRoomEvent = null;
                 return false;
             }
 
@@ -30,11 +30,11 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
                 if (roomStrippedState.EventType == EventType.Member &&
                     content?.UserMembershipState == UserMembershipState.Invite)
                 {
-                    inviteToRoomEvent = new InviteToRoomEvent(roomId, roomStrippedState.SenderUserId);
+                    inviteToRoomEvent = new InviteToRoomEvent(string.Empty, roomId, roomStrippedState.SenderUserId, DateTimeOffset.MinValue);
                     return true;
                 }
 
-                inviteToRoomEvent = new InviteToRoomEvent(string.Empty, string.Empty);
+                inviteToRoomEvent = null;
                 return false;
             }
         }

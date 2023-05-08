@@ -4,7 +4,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Event
 
     public enum MessageType
     {
-        [EnumMember(Value = "m.text")] Text
-        // [JsonProperty("m.text")] Text
+        [EnumMember(Value = "m.text")] Text,
+        [EnumMember(Value = "m.image")] Image
     }
 }

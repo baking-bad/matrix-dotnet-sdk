@@ -1,4 +1,12 @@
-﻿namespace Matrix.Sdk.Core.Infrastructure.Services
+﻿using System.Diagnostics;
+using System.Web;
+using Matrix.Sdk.Core.Domain.RoomEvent;
+using Matrix.Sdk.Core.Infrastructure.Dto.Sync;
+using Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room;
+using Newtonsoft.Json;
+using Scooby;
+
+namespace Matrix.Sdk.Core.Infrastructure.Services
 {
     using System;
     using System.Net.Http;
@@ -47,10 +55,13 @@
             CancellationToken cancellationToken)
         {
             HttpClient httpClient = CreateHttpClient(accessToken);
-
+            
             var path = $"{ResourcePath}/joined_rooms";
-
-            return await httpClient.GetAsJsonAsync<JoinedRoomsResponse>(path, cancellationToken);
+            UI.WriteLine(path);
+            var json = await httpClient.GetStringAsync(path, cancellationToken);
+            UI.WriteLine(json);
+            var obj = JsonConvert.DeserializeObject<JoinedRoomsResponse>(json);
+            return obj;
         }
 
         public async Task LeaveRoomAsync(string accessToken, string roomId,
@@ -61,6 +72,19 @@
             var path = $"{ResourcePath}/rooms/{roomId}/leave";
 
             await httpClient.PostAsync(path, cancellationToken);
+        }
+
+        public record RoomNameResponse
+        {
+            public string name;
+        }
+        public async Task<string> GetRoomNameAsync(string accessToken, string roomId, CancellationToken cancellationToken)
+        {
+            var path = $"{ResourcePath}/rooms/{roomId}/state/m.room.name/";
+            HttpClient httpClient = CreateHttpClient(accessToken);
+            var json = await httpClient.GetStringAsync(path, cancellationToken);
+            var payload = JsonConvert.DeserializeObject<RoomNameResponse>(json);
+            return payload.name;
         }
     }
 }

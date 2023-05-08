@@ -10,6 +10,8 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event
         /// </summary>
         public JObject Content { get; init; }
 
+        public string redacts;
+
         /// <summary>
         ///     <b>Required.</b> The fields in this object will vary depending on the type of event.
         ///     When interacting with the REST API, this is the HTTP body.
@@ -25,6 +27,8 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event
                 Constants.EventType.Create => EventType.Create,
                 Constants.EventType.Member => EventType.Member,
                 Constants.EventType.Message => EventType.Message,
+                Constants.EventType.Redaction => EventType.Redaction,
+                Constants.EventType.Reaction => EventType.Reaction,
                 _ => EventType.Unknown
             };
         }

@@ -5,6 +5,8 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event
         Unknown,
         Create,
         Member,
-        Message
+        Message,
+        Redaction,
+        Reaction
     }
 }

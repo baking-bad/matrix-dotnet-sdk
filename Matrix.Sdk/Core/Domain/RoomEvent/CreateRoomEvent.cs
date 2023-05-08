@@ -4,8 +4,8 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
     using Infrastructure.Dto.Sync.Event.Room;
     using Infrastructure.Dto.Sync.Event.Room.State;
 
-    public record CreateRoomEvent(string RoomId, string SenderUserId, string RoomCreatorUserId) : BaseRoomEvent(RoomId,
-        SenderUserId)
+    public record CreateRoomEvent(string EventId, string RoomId, string SenderUserId, string RoomCreatorUserId, DateTimeOffset Timestamp) : BaseRoomEvent(EventId, RoomId,
+        SenderUserId, Timestamp)
     {
         public static class Factory
         {
@@ -14,11 +14,11 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
                 RoomCreateContent content = roomEvent.Content.ToObject<RoomCreateContent>();
                 if (roomEvent.EventType == EventType.Create && content != null)
                 {
-                    createRoomEvent = new CreateRoomEvent(roomId, roomEvent.SenderUserId, content.RoomCreatorUserId);
+                    createRoomEvent = new CreateRoomEvent(roomEvent.EventId, roomId, roomEvent.SenderUserId, content.RoomCreatorUserId, roomEvent.Timestamp);
                     return true;
                 }
 
-                createRoomEvent = new CreateRoomEvent(string.Empty, string.Empty, string.Empty);
+                createRoomEvent = null;
                 return false;
             }
 
@@ -29,11 +29,12 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
                 if (roomStrippedState.EventType == EventType.Create && content != null)
                 {
                     createRoomEvent =
-                        new CreateRoomEvent(roomId, roomStrippedState.SenderUserId, content.RoomCreatorUserId);
+                        new CreateRoomEvent(string.Empty, roomId, roomStrippedState.SenderUserId, content.RoomCreatorUserId, DateTimeOffset.MinValue);
                     return true;
+
                 }
 
-                createRoomEvent = new CreateRoomEvent(string.Empty, string.Empty, string.Empty);
+                createRoomEvent = null;
                 return false;
             }
         }
