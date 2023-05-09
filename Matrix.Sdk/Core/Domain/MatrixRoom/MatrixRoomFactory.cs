@@ -1,3 +1,5 @@
+using System;
+
 namespace Matrix.Sdk.Core.Domain.MatrixRoom
 {
     using System.Collections.Generic;
@@ -7,14 +9,14 @@ namespace Matrix.Sdk.Core.Domain.MatrixRoom
 
     public class MatrixRoomFactory
     {
-        public MatrixRoom CreateJoined(string roomId, JoinedRoom joinedRoom)
+        public MatrixRoom Create(string roomId, RoomResponse joinedRoom, MatrixRoomStatus status)
         {
             var joinedUserIds = new List<string>();
             foreach (RoomEvent timelineEvent in joinedRoom.Timeline.Events)
                 if (JoinRoomEvent.Factory.TryCreateFrom(timelineEvent, roomId, out JoinRoomEvent joinRoomEvent))
                     joinedUserIds.Add(joinRoomEvent!.SenderUserId);
 
-            return new MatrixRoom(roomId, MatrixRoomStatus.Joined, joinedUserIds);
+            return new MatrixRoom(roomId, status, joinedUserIds);
         }
 
         public MatrixRoom CreateInvite(string roomId, InvitedRoom invitedRoom)
@@ -26,16 +28,6 @@ namespace Matrix.Sdk.Core.Domain.MatrixRoom
                     joinedUserIds.Add(joinRoomEvent!.SenderUserId);
 
             return new MatrixRoom(roomId, MatrixRoomStatus.Invited, joinedUserIds);
-        }
-
-        public MatrixRoom CreateLeft(string roomId, LeftRoom leftRoom)
-        {
-            var joinedUserIds = new List<string>();
-            foreach (RoomEvent timelineEvent in leftRoom.Timeline.Events)
-                if (JoinRoomEvent.Factory.TryCreateFrom(timelineEvent, roomId, out JoinRoomEvent joinRoomEvent))
-                    joinedUserIds.Add(joinRoomEvent!.SenderUserId);
-
-            return new MatrixRoom(roomId, MatrixRoomStatus.Left, joinedUserIds);
         }
     }
 }

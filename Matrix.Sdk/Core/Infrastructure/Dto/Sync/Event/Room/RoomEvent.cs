@@ -1,7 +1,8 @@
+using System;
+using Newtonsoft.Json;
+
 namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room
 {
-    using Newtonsoft.Json;
-
     public record RoomEvent : BaseEvent
     {
         /// <summary>

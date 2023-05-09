@@ -1,3 +1,5 @@
+using System;
+
 namespace Matrix.Sdk.Core.Domain.RoomEvent
 {
     using Infrastructure.Dto.Sync.Event;

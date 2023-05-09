@@ -1,3 +1,4 @@
+using System;
 using Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room.Messaging;
 
 namespace Matrix.Sdk.Core.Domain.RoomEvent

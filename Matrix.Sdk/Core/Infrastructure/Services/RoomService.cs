@@ -1,10 +1,5 @@
-﻿using System.Diagnostics;
-using System.Web;
-using Matrix.Sdk.Core.Domain.RoomEvent;
-using Matrix.Sdk.Core.Infrastructure.Dto.Sync;
-using Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Scooby;
 
 namespace Matrix.Sdk.Core.Infrastructure.Services
 {
@@ -51,17 +46,15 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
         }
 
 
-        public async Task<JoinedRoomsResponse> GetJoinedRoomsAsync(string accessToken,
+        public async Task<List<string>> GetJoinedRoomsAsync(string accessToken,
             CancellationToken cancellationToken)
         {
             HttpClient httpClient = CreateHttpClient(accessToken);
             
             var path = $"{ResourcePath}/joined_rooms";
-            UI.WriteLine(path);
-            var json = await httpClient.GetStringAsync(path, cancellationToken);
-            UI.WriteLine(json);
+            var json = await httpClient.GetAsStringAsync(path, cancellationToken);
             var obj = JsonConvert.DeserializeObject<JoinedRoomsResponse>(json);
-            return obj;
+            return obj.JoinedRoomIds;
         }
 
         public async Task LeaveRoomAsync(string accessToken, string roomId,
@@ -82,7 +75,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
         {
             var path = $"{ResourcePath}/rooms/{roomId}/state/m.room.name/";
             HttpClient httpClient = CreateHttpClient(accessToken);
-            var json = await httpClient.GetStringAsync(path, cancellationToken);
+            var json = await httpClient.GetAsStringAsync(path, cancellationToken);
             var payload = JsonConvert.DeserializeObject<RoomNameResponse>(json);
             return payload.name;
         }

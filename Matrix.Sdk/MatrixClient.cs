@@ -149,10 +149,7 @@ namespace Matrix.Sdk
 
         public async Task<List<string>> GetJoinedRoomsIdsAsync()
         {
-            JoinedRoomsResponse response =
-                await _roomService.GetJoinedRoomsAsync(_accessToken!, _cts.Token);
-
-            return response.JoinedRoomIds;
+            return await _roomService.GetJoinedRoomsAsync(_accessToken!, _cts.Token);
         }
 
         public async Task LeaveRoomAsync(string roomId) => 

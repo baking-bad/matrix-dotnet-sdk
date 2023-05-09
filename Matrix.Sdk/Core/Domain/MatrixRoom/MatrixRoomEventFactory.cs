@@ -7,7 +7,7 @@ namespace Matrix.Sdk.Core.Domain.MatrixRoom
 
     public class MatrixRoomEventFactory
     {
-        public List<BaseRoomEvent> CreateFromJoined(string roomId, JoinedRoom joinedRoom)
+        public List<BaseRoomEvent> CreateFromJoined(string roomId, RoomResponse joinedRoom)
         {
             var roomEvents = new List<BaseRoomEvent>();
 
@@ -56,30 +56,6 @@ namespace Matrix.Sdk.Core.Domain.MatrixRoom
             if (ImageMessageEvent.Factory.TryCreateFromStrippedState(inviteStateEvent, roomId, out var imageMessageEvent)) return imageMessageEvent;
             if (RedactionEvent.Factory.TryCreateFromStrippedState(inviteStateEvent, roomId, out var redactionEvent)) return redactionEvent;
             if (ReactionEvent.Factory.TryCreateFromStrippedState(inviteStateEvent, roomId, out var reactionEvent)) return reactionEvent;
-            return null;
-        }
-
-
-        public List<BaseRoomEvent> CreateFromLeft(string roomId, LeftRoom leftRoom)
-        {
-            var roomEvents = new List<BaseRoomEvent>();
-
-            foreach (RoomEvent timelineEvent in leftRoom.Timeline.Events)
-            {
-                var e = CreateFromLeft(roomId, timelineEvent);
-                if (e != null) roomEvents.Add(e);
-            }
-            return roomEvents;
-        }
-        
-        public BaseRoomEvent CreateFromLeft(string roomId, RoomEvent timelineEvent)
-        {
-            if (JoinRoomEvent.Factory.TryCreateFrom(timelineEvent, roomId, out JoinRoomEvent joinRoomEvent)) return joinRoomEvent;
-            if (CreateRoomEvent.Factory.TryCreateFrom(timelineEvent, roomId, out CreateRoomEvent createRoomEvent)) return createRoomEvent;
-            if (InviteToRoomEvent.Factory.TryCreateFrom(timelineEvent, roomId, out InviteToRoomEvent inviteToRoomEvent)) return inviteToRoomEvent;
-            if (TextMessageEvent.Factory.TryCreateFrom(timelineEvent, roomId, out TextMessageEvent textMessageEvent)) return textMessageEvent;
-            if (RedactionEvent.Factory.TryCreateFrom(timelineEvent, roomId, out var redactionEvent)) return redactionEvent;
-            if (ReactionEvent.Factory.TryCreateFrom(timelineEvent, roomId, out var reactionEvent)) return reactionEvent;
             return null;
         }
     }

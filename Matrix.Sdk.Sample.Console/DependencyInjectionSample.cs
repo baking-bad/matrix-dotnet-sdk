@@ -47,7 +47,10 @@ namespace Matrix.Sdk.Sample.Console
                     if (roomEvent is not TextMessageEvent textMessageEvent)
                         continue;
 
-                    (string roomId, string senderUserId, string message) = textMessageEvent;
+                    var senderUserId = textMessageEvent.SenderUserId;
+                    var message = textMessageEvent.Message;
+                    var roomId = textMessageEvent.RoomId;
+
                     if (client.UserId != senderUserId)
                         Console.WriteLine($"RoomId: {roomId} received message from {senderUserId}: {message}.");
                 }
@@ -60,7 +63,10 @@ namespace Matrix.Sdk.Sample.Console
                     if (roomEvent is not TextMessageEvent textMessageEvent)
                         continue;
 
-                    (string roomId, string senderUserId, string message) = textMessageEvent;
+                    var senderUserId = textMessageEvent.SenderUserId;
+                    var message = textMessageEvent.Message;
+                    var roomId = textMessageEvent.RoomId;
+                    
                     if (anotherClient.UserId != senderUserId)
                         Console.WriteLine($"RoomId: {roomId} received message from {senderUserId}: {message}.");
                 }

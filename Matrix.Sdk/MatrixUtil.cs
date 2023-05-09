@@ -4,37 +4,23 @@ using Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room;
 using Matrix.Sdk.Core.Infrastructure.Services;
 using Newtonsoft.Json;
 
-namespace Matrix.Sdk;
-
-public static class MatrixUtil
+namespace Matrix.Sdk
 {
-    
-    // public static BaseRoomEvent FromChunk(RoomService.RoomMessagesResponse.Chunk chunk)
-    // {
-    //     var json = JsonConvert.SerializeObject(chunk);
-    //     var roomEvent = JsonConvert.DeserializeObject<RoomEvent>(json);
-    //     return ConcretizeEvent(chunk.room_id, roomEvent);
-    // }
-    
-    // factory bad
-    private static readonly MatrixRoomEventFactory matrixRoomEventFactory = new();
-    // private static BaseRoomEvent ConcretizeEvent(string roomId, RoomEvent ev)
-    // {
-    //     var e = matrixRoomEventFactory.CreateFromJoined(roomId, ev);
-    //     if (e == null)
-    //     {
-    //         e = matrixRoomEventFactory.CreateFromLeft(roomId, ev);
-    //     }
-    //     return e;
-    // }
-
-    public static BaseRoomEvent Concretize(RoomEvent roomEvent)
+    public static class MatrixUtil
     {
-        var e = matrixRoomEventFactory.CreateFromJoined(roomEvent.RoomId, roomEvent);
-        if (e == null)
+
+        // factory bad
+        private static readonly MatrixRoomEventFactory matrixRoomEventFactory = new();
+
+        public static BaseRoomEvent Concretize(RoomEvent roomEvent)
         {
-            e = matrixRoomEventFactory.CreateFromLeft(roomEvent.RoomId, roomEvent);
+            var e = matrixRoomEventFactory.CreateFromJoined(roomEvent.RoomId, roomEvent);
+            if (e == null)
+            {
+                e = matrixRoomEventFactory.CreateFromJoined(roomEvent.RoomId, roomEvent);
+            }
+
+            return e;
         }
-        return e;
     }
 }

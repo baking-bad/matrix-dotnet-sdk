@@ -35,11 +35,11 @@ namespace Matrix.Sdk.Core.Domain
 
             private static List<MatrixRoom.MatrixRoom> GetMatrixRoomsFromSync(Rooms rooms)
             {
-                var joinedMatrixRooms = rooms.Join.Select(pair => MatrixRoomFactory.CreateJoined(pair.Key, pair.Value))
+                var joinedMatrixRooms = rooms.Join.Select(pair => MatrixRoomFactory.Create(pair.Key, pair.Value, MatrixRoomStatus.Joined))
                     .ToList();
                 var invitedMatrixRooms = rooms.Invite
                     .Select(pair => MatrixRoomFactory.CreateInvite(pair.Key, pair.Value)).ToList();
-                var leftMatrixRooms = rooms.Leave.Select(pair => MatrixRoomFactory.CreateLeft(pair.Key, pair.Value))
+                var leftMatrixRooms = rooms.Leave.Select(pair => MatrixRoomFactory.Create(pair.Key, pair.Value, MatrixRoomStatus.Left))
                     .ToList();
 
                 return joinedMatrixRooms.Concat(invitedMatrixRooms).Concat(leftMatrixRooms).ToList();
@@ -52,7 +52,7 @@ namespace Matrix.Sdk.Core.Domain
                 var invitedMatrixRoomEvents = rooms.Invite
                     .SelectMany(pair => MatrixRoomEventFactory.CreateFromInvited(pair.Key, pair.Value)).ToList();
                 var leftMatrixRoomEvents = rooms.Leave
-                    .SelectMany(pair => MatrixRoomEventFactory.CreateFromLeft(pair.Key, pair.Value)).ToList();
+                    .SelectMany(pair => MatrixRoomEventFactory.CreateFromJoined(pair.Key, pair.Value)).ToList();
 
                 return joinedMatrixRoomEvents.Concat(invitedMatrixRoomEvents).Concat(leftMatrixRoomEvents).ToList();
             }

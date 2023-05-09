@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Web;
 using Matrix.Sdk.Core.Domain.RoomEvent;
 using Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room;
 using Newtonsoft.Json;
@@ -103,7 +104,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
             await httpClient.PutAsJsonAsync<EventResponse>(path, typingEvent, cancellationToken);
         }
         
-                private static readonly string RoomMessagesFilter = HttpUtility.UrlEncode(
+        private static readonly string RoomMessagesFilter = HttpUtility.UrlEncode(
             JsonConvert.SerializeObject(
                 new Dictionary<string, bool>
                 {
@@ -188,7 +189,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
         public async Task<string> GetString(string accessToken, string url, CancellationToken cancellationToken)
         {
             HttpClient httpClient = CreateHttpClient(accessToken);
-            return await httpClient.GetStringAsync(url, cancellationToken);
+            return await httpClient.GetAsStringAsync(url, cancellationToken);
         }
     }
 }
