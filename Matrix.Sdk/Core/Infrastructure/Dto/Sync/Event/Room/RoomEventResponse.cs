@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room
 {
-    public record RoomEvent : BaseEvent
+    public record RoomEventResponse : BaseEvent
     {
         /// <summary>
         ///     <b>Required.</b> The globally unique event identifier.

@@ -44,7 +44,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync
     /// <summary>
     ///     The timeline of messages and state changes in the room.
     /// </summary>
-    public record Timeline(List<RoomEvent> Events);
+    public record Timeline(List<RoomEventResponse> Events);
 
     /// <summary>
     ///     Updates to the state, between the time indicated by the since parameter,

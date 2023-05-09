@@ -1,27 +1,31 @@
-namespace Matrix.Sdk.Core.Domain.MatrixRoom
+namespace Matrix.Sdk.Core.Domain.Room
 {
     using System.Collections.Generic;
+    using Infrastructure.Dto.Sync;
+    using Infrastructure.Dto.Sync.Event.Room;
+    using RoomEvent;
 
-    public record MatrixRoom
+    public record MatrixRoom(string Id, MatrixRoomStatus Status, List<string> JoinedUserIds)
     {
-        public MatrixRoom(string id, MatrixRoomStatus status, List<string> joinedUserIds)
+        public static MatrixRoom Create(string roomId, RoomResponse joinedRoom, MatrixRoomStatus status)
         {
-            Id = id;
-            Status = status;
-            JoinedUserIds = joinedUserIds;
+            var joinedUserIds = new List<string>();
+            foreach (RoomEventResponse timelineEvent in joinedRoom.Timeline.Events)
+                if (JoinRoomEvent.Factory.TryCreateFrom(timelineEvent, roomId, out JoinRoomEvent joinRoomEvent))
+                    joinedUserIds.Add(joinRoomEvent!.SenderUserId);
+
+            return new MatrixRoom(roomId, status, joinedUserIds);
         }
 
-        public MatrixRoom(string id, MatrixRoomStatus status)
+        public static MatrixRoom CreateInvite(string roomId, InvitedRoom invitedRoom)
         {
-            Id = id;
-            Status = status;
-            JoinedUserIds = new List<string>();
+            var joinedUserIds = new List<string>();
+            foreach (RoomStrippedState timelineEvent in invitedRoom.InviteState.Events)
+                if (JoinRoomEvent.Factory.TryCreateFromStrippedState(timelineEvent, roomId,
+                        out JoinRoomEvent joinRoomEvent))
+                    joinedUserIds.Add(joinRoomEvent!.SenderUserId);
+
+            return new MatrixRoom(roomId, MatrixRoomStatus.Invited, joinedUserIds);
         }
-
-        public string Id { get; }
-
-        public MatrixRoomStatus Status { get; }
-
-        public List<string> JoinedUserIds { get; }
     }
 }

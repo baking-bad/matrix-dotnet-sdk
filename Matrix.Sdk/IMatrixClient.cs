@@ -9,7 +9,7 @@ namespace Matrix.Sdk
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.Domain.MatrixRoom;
+    using Core.Domain.Room;
     using Core.Infrastructure.Dto.Room.Create;
     using Core.Infrastructure.Dto.Room.Join;
 

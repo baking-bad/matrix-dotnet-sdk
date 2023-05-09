@@ -12,7 +12,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
         
         public static class Factory
         {
-            public static bool TryCreateFrom(RoomEvent roomEvent, string roomId, out RedactionEvent redactionEvent)
+            public static bool TryCreateFrom(RoomEventResponse roomEvent, string roomId, out RedactionEvent redactionEvent)
             {
                 ReasonObj content = roomEvent.Content.ToObject<ReasonObj>();
                 if (roomEvent.EventType == EventType.Redaction)

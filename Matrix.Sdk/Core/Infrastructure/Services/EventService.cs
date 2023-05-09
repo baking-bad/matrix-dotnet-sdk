@@ -120,8 +120,8 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
 
             public string start;
 
-            public RoomEvent[] chunk;
-            public RoomEvent[] state;
+            public RoomEventResponse[] chunk;
+            public RoomEventResponse[] state;
             
             public string end;
         }
@@ -145,37 +145,38 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
 
                 HttpClient httpClient = CreateHttpClient(accessToken);
                 var response = await httpClient.GetAsJsonAsync<RoomMessagesResponse>(path, cancellationToken);
+
+                foreach (var roomEvent in response.chunk)
                 {
-                    foreach (var roomEvent in response.chunk)
+                    if (roomEvent.EventId == fromEventId)
                     {
-                        if (roomEvent.EventId == fromEventId)
-                        {
-                            Console.WriteLine($"hit from event: {fromEventId}");
-                            hasHitFromEvent = true;
-                        }
+                        hasHitFromEvent = true;
+                    }
 
-                        if (!hasHitFromEvent)
-                        {
-                            continue;
-                        }
+                    if (!hasHitFromEvent)
+                    {
+                        continue;
+                    }
 
-                        var ev = MatrixUtil.Concretize(roomEvent);
-                        if (ev != null)
-                        {
-                            events.Add(ev);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Unable to concretize event: {JsonConvert.SerializeObject(roomEvent, Formatting.Indented)}");
-                        }
+                    var ev = BaseRoomEvent.Create(roomEvent.RoomId, roomEvent);
+                    if (ev != null)
+                    {
+                        events.Add(ev);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Unable to concretize event: {JsonConvert.SerializeObject(roomEvent, Formatting.Indented)}");
+                    }
 
+                    if (ev != null)
+                    {
                         if (await stopCallback.Invoke(ev))
                         {
                             return events;
                         }
                     }
                 }
-                
+
                 fromToken = response.end;
 
                 if ((response.chunk == null || response.chunk.Length == 0) && (response.state == null || response.state.Length == 0))

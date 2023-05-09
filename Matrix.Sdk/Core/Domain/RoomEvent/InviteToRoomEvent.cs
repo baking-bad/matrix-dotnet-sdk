@@ -10,7 +10,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
     {
         public static class Factory
         {
-            public static bool TryCreateFrom(RoomEvent roomEvent, string roomId,
+            public static bool TryCreateFrom(RoomEventResponse roomEvent, string roomId,
                 out InviteToRoomEvent inviteToRoomEvent)
             {
                 RoomMemberContent content = roomEvent.Content.ToObject<RoomMemberContent>();

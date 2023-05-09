@@ -11,7 +11,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
     {
         public static class Factory
         {
-            public static bool TryCreateFrom(RoomEvent roomEvent, string roomId, out CreateRoomEvent createRoomEvent)
+            public static bool TryCreateFrom(RoomEventResponse roomEvent, string roomId, out CreateRoomEvent createRoomEvent)
             {
                 RoomCreateContent content = roomEvent.Content.ToObject<RoomCreateContent>();
                 if (roomEvent.EventType == EventType.Create && content != null)

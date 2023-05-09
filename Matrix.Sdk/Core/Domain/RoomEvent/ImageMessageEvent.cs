@@ -11,7 +11,7 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
     {
         public static class Factory
         {
-            public static bool TryCreateFrom(RoomEvent roomEvent, string roomId, out ImageMessageEvent textMessageEvent)
+            public static bool TryCreateFrom(RoomEventResponse roomEvent, string roomId, out ImageMessageEvent textMessageEvent)
             {
                 ImageContent content = roomEvent.Content.ToObject<ImageContent>();
                 if (roomEvent.EventType == EventType.Message && content?.MessageType == MessageType.Image)

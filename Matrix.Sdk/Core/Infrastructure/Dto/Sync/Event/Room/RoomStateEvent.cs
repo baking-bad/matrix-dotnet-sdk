@@ -1,6 +1,6 @@
 namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room
 {
-    public record RoomStateEvent : RoomEvent
+    public record RoomStateEvent : RoomEventResponse
     {
         /// <summary>
         ///     <b>Required.</b>

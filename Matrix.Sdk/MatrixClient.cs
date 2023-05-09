@@ -8,7 +8,7 @@ namespace Matrix.Sdk
     using System.Threading;
     using System.Threading.Tasks;
     using Core.Domain;
-    using Core.Domain.MatrixRoom;
+    using Core.Domain.Room;
     using Core.Domain.Services;
     using Core.Infrastructure.Dto.Event;
     using Core.Infrastructure.Dto.Login;

@@ -1,4 +1,4 @@
-namespace Matrix.Sdk.Core.Domain.MatrixRoom
+namespace Matrix.Sdk.Core.Domain.Room
 {
     public enum MatrixRoomStatus
     {

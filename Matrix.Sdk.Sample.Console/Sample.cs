@@ -3,7 +3,7 @@ namespace Matrix.Sdk.Sample.Console
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Core.Domain.MatrixRoom;
+    using Core.Domain.Room;
     using Core.Domain.RoomEvent;
     using Core.Infrastructure.Dto.Room.Create;
     using Serilog;

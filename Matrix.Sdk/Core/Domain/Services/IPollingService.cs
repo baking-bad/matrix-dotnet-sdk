@@ -1,7 +1,7 @@
 namespace Matrix.Sdk.Core.Domain.Services
 {
     using System;
-    using MatrixRoom;
+    using Room;
     
     public interface IPollingService : IDisposable
     {
