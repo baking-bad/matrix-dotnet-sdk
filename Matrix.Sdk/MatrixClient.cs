@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices.Dto.User;
+using System.Runtime.CompilerServices.Dto.User;
 using Matrix.Sdk.Core.Domain.RoomEvent;
 
 namespace Matrix.Sdk
@@ -213,7 +213,13 @@ namespace Matrix.Sdk
         {
             return await _roomService.GetRoomNameAsync(_accessToken!, roomId, _cts.Token);
         }
-
+        
+        public async Task<EventResponse> SetRoomTopic(string roomId, string topic)
+        {
+            string transactionId = CreateTransactionId();
+            return await _roomService.SetTopicAsync(_accessToken!, roomId, topic, _cts.Token);
+        }
+        
         public async Task<MatrixProfile> GetUserProfile(string userId)
         {
             return await _userService.GetProfile(_accessToken!, userId, _cts.Token);

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices.Dto.Room.Manage;
+using Matrix.Sdk.Core.Infrastructure.Dto.Event;
 using Newtonsoft.Json;
 
 namespace Matrix.Sdk.Core.Infrastructure.Services
@@ -78,6 +80,20 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
             var json = await httpClient.GetAsStringAsync(path, cancellationToken);
             var payload = JsonConvert.DeserializeObject<RoomNameResponse>(json);
             return payload.name;
+        }
+        
+        public async Task<EventResponse> SetTopicAsync(string accessToken,
+            string roomId,
+            string topic, CancellationToken cancellationToken)
+        {
+            const string eventType = "m.room.topic";
+            var model = new ChangeTopicRequest(topic);
+
+            HttpClient httpClient = CreateHttpClient(accessToken);
+
+            var path = $"{ResourcePath}/rooms/{roomId}/state/{eventType}";
+            
+            return await httpClient.PutAsJsonAsync<EventResponse>(path, model, cancellationToken);
         }
     }
 }

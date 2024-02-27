@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices.Dto.User;
 using Matrix.Sdk.Core.Domain.RoomEvent;
+using Matrix.Sdk.Core.Infrastructure.Dto.Event;
 using Matrix.Sdk.Core.Infrastructure.Dto.Sync;
 using Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room;
 using Matrix.Sdk.Core.Infrastructure.Services;
@@ -60,6 +61,7 @@ namespace Matrix.Sdk
 
         Task<string> GetString(string url);
         Task<string> GetRoomName(string id);
+        Task<EventResponse> SetRoomTopic(string roomId, string topic);
         Task<MatrixProfile> GetUserProfile(string fullUserId);
         Task<byte[]> GetMxcImage(string mxcUrl);
     }
