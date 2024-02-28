@@ -214,12 +214,17 @@ namespace Matrix.Sdk
             return await _roomService.GetRoomNameAsync(_accessToken!, roomId, _cts.Token);
         }
         
-        public async Task<EventResponse> SetRoomTopic(string roomId, string topic)
+        public async Task<EventResponse> SetRoomTopicAsync(string roomId, string topic)
         {
-            string transactionId = CreateTransactionId();
+            var transactionId = CreateTransactionId();
             return await _roomService.SetTopicAsync(_accessToken!, roomId, topic, _cts.Token);
         }
         
+        public async Task<EventResponse> SetRoomNameAsync(string roomId, string name)
+        {
+            var transactionId = CreateTransactionId();
+            return await _roomService.SetNameAsync(_accessToken!, roomId, name, _cts.Token);
+        }
         public async Task<MatrixProfile> GetUserProfile(string userId)
         {
             return await _userService.GetProfile(_accessToken!, userId, _cts.Token);

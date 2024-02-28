@@ -95,5 +95,19 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
             
             return await httpClient.PutAsJsonAsync<EventResponse>(path, model, cancellationToken);
         }
+        
+        public async Task<EventResponse> SetNameAsync(string accessToken,
+            string roomId,
+            string name, CancellationToken cancellationToken)
+        {
+            const string eventType = "m.room.name";
+            var model = new ChangeNameRequest(name);
+
+            HttpClient httpClient = CreateHttpClient(accessToken);
+
+            var path = $"{ResourcePath}/rooms/{roomId}/state/{eventType}";
+            
+            return await httpClient.PutAsJsonAsync<EventResponse>(path, model, cancellationToken);
+        }
     }
 }

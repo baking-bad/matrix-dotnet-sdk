@@ -4,5 +4,9 @@ namespace System.Runtime.CompilerServices.Dto.Room.Manage
         {
             public string? topic { get; } = topic;
         }
-        
+
+        public record ChangeNameRequest(string? name)
+        {
+            public string? name { get; } = name;
+        }
 }

@@ -61,7 +61,8 @@ namespace Matrix.Sdk
 
         Task<string> GetString(string url);
         Task<string> GetRoomName(string id);
-        Task<EventResponse> SetRoomTopic(string roomId, string topic);
+        Task<EventResponse> SetRoomTopicAsync(string roomId, string topic);
+        Task<EventResponse> SetRoomNameAsync(string roomId, string name);
         Task<MatrixProfile> GetUserProfile(string fullUserId);
         Task<byte[]> GetMxcImage(string mxcUrl);
     }
