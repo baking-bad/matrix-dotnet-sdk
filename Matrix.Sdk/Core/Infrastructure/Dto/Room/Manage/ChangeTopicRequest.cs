@@ -9,4 +9,9 @@ namespace System.Runtime.CompilerServices.Dto.Room.Manage
         {
             public string? name { get; } = name;
         }
+        
+        public record ChangeAvatarRequest(string? url)
+        {
+            public string? url { get; } = url;
+        }
 }

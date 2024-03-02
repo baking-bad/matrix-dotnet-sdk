@@ -219,7 +219,11 @@ namespace Matrix.Sdk
             var transactionId = CreateTransactionId();
             return await _roomService.SetTopicAsync(_accessToken!, roomId, topic, _cts.Token);
         }
-        
+        public async Task<EventResponse> SetRoomAvatarAsync(string roomId, string url)
+        {
+            var transactionId = CreateTransactionId();
+            return await _roomService.SetAvatarAsync(_accessToken!, roomId, url, _cts.Token);
+        }
         public async Task<EventResponse> SetRoomNameAsync(string roomId, string name)
         {
             var transactionId = CreateTransactionId();

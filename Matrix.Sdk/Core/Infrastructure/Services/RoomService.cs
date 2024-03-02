@@ -109,5 +109,19 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
             
             return await httpClient.PutAsJsonAsync<EventResponse>(path, model, cancellationToken);
         }
+        
+        public async Task<EventResponse> SetAvatarAsync(string accessToken,
+            string roomId,
+            string url, CancellationToken cancellationToken)
+        {
+            const string eventType = "m.room.avatar";
+            var model = new ChangeAvatarRequest(url);
+
+            HttpClient httpClient = CreateHttpClient(accessToken);
+
+            var path = $"{ResourcePath}/rooms/{roomId}/state/{eventType}";
+            
+            return await httpClient.PutAsJsonAsync<EventResponse>(path, model, cancellationToken);
+        }
     }
 }
