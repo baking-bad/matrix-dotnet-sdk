@@ -33,13 +33,15 @@ namespace Matrix.Sdk
             var eventService = new EventService(_httpClientFactory);
             var userService = new UserService(_httpClientFactory);
             var roomService = new RoomService(_httpClientFactory);
+            var mediaService = new MediaService(_httpClientFactory);
             var pollingService = new PollingService(eventService, logger);
 
             _client = new MatrixClient(
                 pollingService,
                 userService,
                 roomService,
-                eventService);
+                eventService,
+                mediaService);
 
             return _client;
         }

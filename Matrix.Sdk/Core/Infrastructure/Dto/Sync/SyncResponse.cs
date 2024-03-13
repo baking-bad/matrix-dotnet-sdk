@@ -24,7 +24,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync
         /// <summary>
         ///     The rooms that the user has joined, mapped as room ID to room information.
         /// </summary>
-        public Dictionary<string, JoinedRoom> Join { get; init; }
+        public Dictionary<string, RoomResponse> Join { get; init; }
 
         /// <summary>
         ///     The rooms that the user has been invited to, mapped as room ID to room information.
@@ -34,19 +34,17 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync
         /// <summary>
         ///     The rooms that the user has left or been banned from, mapped as room ID to room information.
         /// </summary>
-        public Dictionary<string, LeftRoom> Leave { get; init; }
+        public Dictionary<string, RoomResponse> Leave { get; init; }
     }
 
-    public record JoinedRoom(Timeline Timeline, State State);
+    public record RoomResponse(Timeline Timeline, State State);
 
     public record InvitedRoom(InviteState InviteState);
-
-    public record LeftRoom(Timeline Timeline, State State);
 
     /// <summary>
     ///     The timeline of messages and state changes in the room.
     /// </summary>
-    public record Timeline(List<RoomEvent> Events);
+    public record Timeline(List<RoomEventResponse> Events);
 
     /// <summary>
     ///     Updates to the state, between the time indicated by the since parameter,

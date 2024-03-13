@@ -8,7 +8,7 @@ namespace Matrix.Sdk.Core.Domain.Services
     using System.Threading.Tasks;
     using Infrastructure.Dto.Sync;
     using Infrastructure.Services;
-    using MatrixRoom;
+    using Room;
     using Microsoft.Extensions.Logging;
 
     public class PollingService : IPollingService

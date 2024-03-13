@@ -20,7 +20,7 @@ namespace Matrix.Sdk
             services.AddSingleton<EventService>();
             services.AddSingleton<RoomService>();
             services.AddSingleton<UserService>();
-
+            services.AddSingleton<MediaService>(); 
             services.AddTransient<IPollingService, PollingService>();
             services.AddTransient<IMatrixClient, MatrixClient>();
 

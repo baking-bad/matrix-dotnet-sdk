@@ -3,12 +3,12 @@ namespace Matrix.Sdk.Core.Domain
     using System.Collections.Generic;
     using System.Linq;
     using Infrastructure.Dto.Sync;
-    using MatrixRoom;
+    using Room;
     using RoomEvent;
 
     public record SyncBatch
     {
-        private SyncBatch(string nextBatch, List<MatrixRoom.MatrixRoom> matrixRooms,
+        private SyncBatch(string nextBatch, List<Room.MatrixRoom> matrixRooms,
             List<BaseRoomEvent> matrixRoomEvents)
         {
             NextBatch = nextBatch;
@@ -17,29 +17,26 @@ namespace Matrix.Sdk.Core.Domain
         }
 
         public string NextBatch { get; }
-        public List<MatrixRoom.MatrixRoom> MatrixRooms { get; }
+        public List<Room.MatrixRoom> MatrixRooms { get; }
         public List<BaseRoomEvent> MatrixRoomEvents { get; }
 
         internal static class Factory
         {
-            private static readonly MatrixRoomFactory MatrixRoomFactory = new();
-            private static readonly MatrixRoomEventFactory MatrixRoomEventFactory = new();
-
             public static SyncBatch CreateFromSync(string nextBatch, Rooms rooms)
             {
-                List<MatrixRoom.MatrixRoom> matrixRooms = GetMatrixRoomsFromSync(rooms);
+                List<Room.MatrixRoom> matrixRooms = GetMatrixRoomsFromSync(rooms);
                 List<BaseRoomEvent> matrixRoomEvents = GetMatrixEventsFromSync(rooms);
 
                 return new SyncBatch(nextBatch, matrixRooms, matrixRoomEvents);
             }
 
-            private static List<MatrixRoom.MatrixRoom> GetMatrixRoomsFromSync(Rooms rooms)
+            private static List<Room.MatrixRoom> GetMatrixRoomsFromSync(Rooms rooms)
             {
-                var joinedMatrixRooms = rooms.Join.Select(pair => MatrixRoomFactory.CreateJoined(pair.Key, pair.Value))
+                var joinedMatrixRooms = rooms.Join.Select(pair => Room.MatrixRoom.Create(pair.Key, pair.Value, MatrixRoomStatus.Joined))
                     .ToList();
                 var invitedMatrixRooms = rooms.Invite
-                    .Select(pair => MatrixRoomFactory.CreateInvite(pair.Key, pair.Value)).ToList();
-                var leftMatrixRooms = rooms.Leave.Select(pair => MatrixRoomFactory.CreateLeft(pair.Key, pair.Value))
+                    .Select(pair => Room.MatrixRoom.CreateInvite(pair.Key, pair.Value)).ToList();
+                var leftMatrixRooms = rooms.Leave.Select(pair => Room.MatrixRoom.Create(pair.Key, pair.Value, MatrixRoomStatus.Left))
                     .ToList();
 
                 return joinedMatrixRooms.Concat(invitedMatrixRooms).Concat(leftMatrixRooms).ToList();
@@ -48,11 +45,11 @@ namespace Matrix.Sdk.Core.Domain
             private static List<BaseRoomEvent> GetMatrixEventsFromSync(Rooms rooms)
             {
                 var joinedMatrixRoomEvents = rooms.Join
-                    .SelectMany(pair => MatrixRoomEventFactory.CreateFromJoined(pair.Key, pair.Value)).ToList();
+                    .SelectMany(pair => BaseRoomEvent.Create(pair.Key, pair.Value)).ToList();
                 var invitedMatrixRoomEvents = rooms.Invite
-                    .SelectMany(pair => MatrixRoomEventFactory.CreateFromInvited(pair.Key, pair.Value)).ToList();
+                    .SelectMany(pair => BaseRoomEvent.CreateFromInvited(pair.Key, pair.Value)).ToList();
                 var leftMatrixRoomEvents = rooms.Leave
-                    .SelectMany(pair => MatrixRoomEventFactory.CreateFromLeft(pair.Key, pair.Value)).ToList();
+                    .SelectMany(pair => BaseRoomEvent.Create(pair.Key, pair.Value)).ToList();
 
                 return joinedMatrixRoomEvents.Concat(invitedMatrixRoomEvents).Concat(leftMatrixRoomEvents).ToList();
             }

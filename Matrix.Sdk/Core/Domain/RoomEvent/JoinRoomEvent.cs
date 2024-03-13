@@ -1,23 +1,25 @@
+using System;
+
 namespace Matrix.Sdk.Core.Domain.RoomEvent
 {
     using Infrastructure.Dto.Sync.Event;
     using Infrastructure.Dto.Sync.Event.Room;
     using Infrastructure.Dto.Sync.Event.Room.State;
 
-    public record JoinRoomEvent(string RoomId, string SenderUserId) : BaseRoomEvent(RoomId, SenderUserId)
+    public record JoinRoomEvent(string EventId, string RoomId, string SenderUserId, DateTimeOffset Timestamp) : BaseRoomEvent(EventId, RoomId, SenderUserId, Timestamp)
     {
         public static class Factory
         {
-            public static bool TryCreateFrom(RoomEvent roomEvent, string roomId, out JoinRoomEvent joinRoomEvent)
+            public static bool TryCreateFrom(RoomEventResponse roomEvent, string roomId, out JoinRoomEvent joinRoomEvent)
             {
                 RoomMemberContent content = roomEvent.Content.ToObject<RoomMemberContent>();
                 if (roomEvent.EventType == EventType.Member && content?.UserMembershipState == UserMembershipState.Join)
                 {
-                    joinRoomEvent = new JoinRoomEvent(roomId, roomEvent.SenderUserId);
+                    joinRoomEvent = new JoinRoomEvent(roomEvent.EventId, roomId, roomEvent.SenderUserId, roomEvent.Timestamp);
                     return true;
                 }
 
-                joinRoomEvent = new JoinRoomEvent(string.Empty, string.Empty);
+                joinRoomEvent = null;
                 return false;
             }
 
@@ -28,11 +30,11 @@ namespace Matrix.Sdk.Core.Domain.RoomEvent
                 if (roomStrippedState.EventType == EventType.Member &&
                     content?.UserMembershipState == UserMembershipState.Join)
                 {
-                    joinRoomEvent = new JoinRoomEvent(roomId, roomStrippedState.SenderUserId);
+                    joinRoomEvent = new JoinRoomEvent(string.Empty, roomId, roomStrippedState.SenderUserId, DateTimeOffset.MinValue);
                     return true;
                 }
 
-                joinRoomEvent = new JoinRoomEvent(string.Empty, string.Empty);
+                joinRoomEvent = null;
                 return false;
             }
         }

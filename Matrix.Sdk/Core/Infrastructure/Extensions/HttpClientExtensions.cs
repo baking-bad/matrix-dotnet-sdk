@@ -1,14 +1,14 @@
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+
 namespace Matrix.Sdk.Core.Infrastructure.Extensions
 {
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using Newtonsoft.Json.Serialization;
-
     internal static class HttpClientExtensions
     {
         private static JsonSerializerSettings GetJsonSettings()
@@ -71,16 +71,26 @@ namespace Matrix.Sdk.Core.Infrastructure.Extensions
             var content = new StringContent(json, Encoding.Default, "application/json");
 
             HttpResponseMessage response = await httpClient.PutAsync(requestUri, content, cancellationToken);
+            
             string result = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
+            {
                 throw new ApiException(response.RequestMessage.RequestUri,
                     json, result, response.StatusCode);
-
+            }
+            
             return JsonConvert.DeserializeObject<TResponse>(result, settings)!;
         }
 
         public static async Task<TResponse> GetAsJsonAsync<TResponse>(this HttpClient httpClient,
+            string requestUri, CancellationToken cancellationToken)
+        {
+            var json = await httpClient.GetAsStringAsync(requestUri, cancellationToken);
+            return JsonConvert.DeserializeObject<TResponse>(json, GetJsonSettings())!;
+        }
+        
+        public static async Task<string> GetAsStringAsync(this HttpClient httpClient,
             string requestUri, CancellationToken cancellationToken)
         {
             HttpResponseMessage response = await httpClient.GetAsync(requestUri, cancellationToken);//.ConfigureAwait(false);
@@ -90,7 +100,20 @@ namespace Matrix.Sdk.Core.Infrastructure.Extensions
                 throw new ApiException(response.RequestMessage.RequestUri,
                     null, result, response.StatusCode);
 
-            return JsonConvert.DeserializeObject<TResponse>(result, GetJsonSettings())!;
+            return result;
+        }
+        
+        public static async Task<byte[]> GetAsBytesAsync(this HttpClient httpClient,
+            string requestUri, CancellationToken cancellationToken)
+        {
+            HttpResponseMessage response = await httpClient.GetAsync(requestUri, cancellationToken);
+            byte[] result = await response.Content.ReadAsByteArrayAsync();
+
+            if (!response.IsSuccessStatusCode)
+                throw new ApiException(response.RequestMessage.RequestUri,
+            null, $"{result.Length} bytes", response.StatusCode);
+
+            return result;
         }
 
         public static void AddBearerToken(this HttpClient httpClient, string bearer) =>

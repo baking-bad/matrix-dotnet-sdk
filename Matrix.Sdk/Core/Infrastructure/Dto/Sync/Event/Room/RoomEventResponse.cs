@@ -1,13 +1,16 @@
+using System;
+using Newtonsoft.Json;
+
 namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room
 {
-    using Newtonsoft.Json;
-
-    public record RoomEvent : BaseEvent
+    public record RoomEventResponse : BaseEvent
     {
         /// <summary>
         ///     <b>Required.</b> The globally unique event identifier.
         /// </summary>
         public string EventId { get; init; }
+        
+        public string RoomId { get; init; }
 
         /// <summary>
         ///     <b>Required.</b> Contains the fully-qualified ID of the user who sent this event.
@@ -20,6 +23,9 @@ namespace Matrix.Sdk.Core.Infrastructure.Dto.Sync.Event.Room
         /// </summary>
         [JsonProperty("origin_server_ts")]
         public long OriginServerTimestamp { get; init; }
+
+        [JsonIgnore]
+        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(OriginServerTimestamp).UtcDateTime;
 
         // ReSharper disable once InvalidXmlDocComment
         /// <summary>

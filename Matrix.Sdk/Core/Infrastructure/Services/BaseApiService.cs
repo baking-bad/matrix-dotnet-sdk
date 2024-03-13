@@ -18,6 +18,7 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
         }
 
         protected virtual string ResourcePath => "_matrix/client/r0";
+        protected virtual string MediaPath => "_matrix/media/r0";
 
 
         /// <summary>
