@@ -36,6 +36,7 @@ namespace Matrix.Sdk
         event EventHandler<MatrixRoomEventsEventArgs> OnMatrixRoomEventsReceived;
 
         Task LoginAsync(Uri baseAddress, string user, string password, string deviceId);
+        Task LoginAsync(Uri baseAddress, string token, string? userId = null);
 
         void Start(string? nextBatch = null);
 
@@ -47,6 +48,7 @@ namespace Matrix.Sdk
 
         Task<string> SendMessageAsync(string roomId, string message);
         Task<string> SendImageAsync(string roomId, string filename, byte[] imageData);
+        Task<string> SendFileAsync(string roomId, string filename, byte[] blob);
 
         Task<List<string>> GetJoinedRoomsIdsAsync();
 

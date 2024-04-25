@@ -82,6 +82,23 @@ namespace Matrix.Sdk
             IsLoggedIn = true;
         }
 
+        public async Task LoginAsync(Uri baseAddress, string token, string? userId = null)
+        {
+            _userService.BaseAddress = baseAddress;
+            _roomService.BaseAddress = baseAddress;
+            _eventService.BaseAddress = baseAddress;
+            _mediaService.BaseAddress = baseAddress;
+            BaseAddress = baseAddress;
+
+            UserId = userId;
+            
+            _accessToken = token;
+
+            _pollingService.Init(baseAddress, _accessToken);
+
+            IsLoggedIn = true;
+        }
+
         public void Start(string? nextBatch = null)
         {
             if (!IsLoggedIn)
@@ -134,6 +151,21 @@ namespace Matrix.Sdk
             var mxcUrl = await _mediaService.UploadImage(_accessToken!, filename, imageData, _cts.Token);
             
             EventResponse eventResponse = await _eventService.SendImageAsync(_accessToken!,
+                roomId, transactionId, filename, mxcUrl, _cts.Token);
+
+            if (eventResponse.EventId == null)
+                throw new NullReferenceException(nameof(eventResponse.EventId));
+
+            return eventResponse.EventId;
+        }
+
+        public async Task<string> SendFileAsync(string roomId, string filename, byte[] blob)
+        {
+            string transactionId = CreateTransactionId();
+
+            var mxcUrl = await _mediaService.UploadFile(_accessToken!, filename, blob, _cts.Token);
+
+            EventResponse eventResponse = await _eventService.SendFileAsync(_accessToken!,
                 roomId, transactionId, filename, mxcUrl, _cts.Token);
 
             if (eventResponse.EventId == null)
