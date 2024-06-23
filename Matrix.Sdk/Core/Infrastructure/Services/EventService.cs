@@ -67,6 +67,22 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
 
             var response = await httpClient.PutAsJsonAsync<EventResponse>(path, model, cancellationToken);
             return response;
+        }    
+        
+        public async Task<EventResponse> SendFileAsync(string accessToken,
+            string roomId, string transactionId, string filename,
+            string mxcUrl, CancellationToken cancellationToken)
+        {
+            var model = new FileMessageEvent(filename, mxcUrl);
+            
+            const string eventType = "m.room.message";
+
+            HttpClient httpClient = CreateHttpClient(accessToken);
+
+            var path = $"{ResourcePath}/rooms/{roomId}/send/{eventType}/{transactionId}";
+
+            var response = await httpClient.PutAsJsonAsync<EventResponse>(path, model, cancellationToken);
+            return response;
         }
 
         public async Task<EventResponse> EditMessageAsync(string accessToken,

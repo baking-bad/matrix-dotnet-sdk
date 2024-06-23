@@ -44,7 +44,31 @@ namespace Matrix.Sdk.Core.Infrastructure.Services
                 return JsonConvert.DeserializeObject<UploadResponse>(json).content_uri;
             }
         }
-        
+
+        public async Task<string> UploadFile(string accessToken, string filename, byte[] imageData, CancellationToken cancellationToken)
+        {
+            var extension = Path.GetExtension(filename);
+            if (string.IsNullOrEmpty(extension))
+            {
+                throw new Exception($"only uploads with filename and extension are supported: {filename}");
+            }
+
+            string encodedFilename = HttpUtility.UrlEncode(filename);
+            string url = $"{MediaPath}/upload?filename={encodedFilename}";
+
+            HttpClient httpClient = CreateHttpClient(accessToken);
+            using (var content = new ByteArrayContent(imageData))
+            {
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/" + extension.Remove(0, 1));
+                content.Headers.ContentLength = imageData.Length;
+
+                var response = await httpClient.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<UploadResponse>(json).content_uri;
+            }
+        }
+
         public async Task<byte[]> GetMedia(string accessToken, string mxcUrl, CancellationToken cancellationToken)
         {
             HttpClient httpClient = CreateHttpClient(accessToken);
